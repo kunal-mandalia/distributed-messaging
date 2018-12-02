@@ -1,7 +1,7 @@
 FROM node:10.14.0-alpine
 ENV APP_HOSTNAME=0.0.0.0
 ENV APP_PORT=8080
-ENV SERVICE_ADDRESS_ORDER=http://order:8080/order
+ENV DB_MONGO_CONNECTION_STRING=mongodb://mongo:27017/distributed-messaging
 RUN npm install
 COPY . /service
 WORKDIR /service
