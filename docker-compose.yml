@@ -1,0 +1,6 @@
+version: '3'
+services:
+  api-gateway:
+    build: ./services/apiGateway
+    ports:
+     - "5000:8080"
