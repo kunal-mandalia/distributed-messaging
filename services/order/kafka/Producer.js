@@ -1,10 +1,10 @@
 var Kafka = require('node-rdkafka')
 
-function Producer() {
+function Producer({ metadataBrokerList }) {
   return new Promise((resolve, reject) => {
     const producer = new Kafka.Producer({
       //'debug' : 'all',
-      'metadata.broker.list': 'localhost:9092',
+      'metadata.broker.list': metadataBrokerList,
       'dr_cb': true  //delivery report callback
     })
     

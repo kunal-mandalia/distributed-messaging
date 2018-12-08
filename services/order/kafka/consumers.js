@@ -1,9 +1,12 @@
 const Consumer = require('./Consumer')
+const config = require('../config')
 
 const consumers = {}
 
 async function defineConsumers(producer) {
+  const metadataBrokerList = config.get('kafka.metadataBrokerList')
   const orderConsumer = await Consumer({
+    metadataBrokerList,
     consumerGroupId: 'order',
     topicNames: ['order'],
     handler: (consumer) => (message) => {
@@ -14,6 +17,7 @@ async function defineConsumers(producer) {
   })
 
   const inventoryConsumer = await Consumer({
+    metadataBrokerList,
     consumerGroupId: 'inventory',
     topicNames: ['order', 'inventory'],
     handler: (consumer) => (message) => {
@@ -33,6 +37,7 @@ async function defineConsumers(producer) {
   })
 
   const deliveryConsumer = await Consumer({
+    metadataBrokerList,
     consumerGroupId: 'delivery',
     topicNames: ['delivery', 'inventory_updated'],
     handler: (consumer) => (message) => {

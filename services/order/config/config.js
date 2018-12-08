@@ -27,6 +27,14 @@ const config = convict({
       default: "mongodb://127.0.0.1:27017/distributed-messaging",
       env: "DB_MONGO_CONNECTION_STRING"
     }
+  },
+  kafka: {
+    metadataBrokerList: {
+      doc: "The connection string to the Kafka broker.",
+      format: String,
+      default: "127.0.0.1:9092",
+      env: "KAFKA_METADATA_BROKER_LIST"
+    }
   }
 })
 

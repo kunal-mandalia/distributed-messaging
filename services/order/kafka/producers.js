@@ -1,10 +1,12 @@
 const Producer = require('./Producer')
+const config = require('../config')
 
 const producers = {}
 
 async function defineProducers() {
   try {
-    const producer = await Producer()
+    const metadataBrokerList = config.get('kafka.metadataBrokerList')
+  const producer = await Producer({ metadataBrokerList })
     producers.producer = producer
     return producers
   } catch (error) {

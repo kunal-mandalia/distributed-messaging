@@ -1,10 +1,10 @@
 const Kafka = require('node-rdkafka');
 
-function Consumer({ consumerGroupId, topicNames, handler }) {
+function Consumer({ consumerGroupId, topicNames, handler, metadataBrokerList }) {
   return new Promise((resolve, reject) => {
     const consumer = new Kafka.KafkaConsumer({
       // 'debug': 'all',
-      'metadata.broker.list': 'localhost:9092',
+      'metadata.broker.list': metadataBrokerList,
       'group.id': consumerGroupId,
       'enable.auto.commit': false
     });
