@@ -4,7 +4,7 @@ const Kafka = require('node-rdkafka')
 const config = require('./config')
 const defineConsumers = require('../shared/kafka/defineConsumers')
 const { defineProducers } = require('../shared/kafka/producers')
-const consumersDefinition = require('./kafka/consumers')
+const consumersDefinition = require('./kafka/consumersDefinition')
 const routes = require('./routes')
 
 let runningService

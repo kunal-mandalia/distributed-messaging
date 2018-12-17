@@ -27,7 +27,7 @@ const consumersDefinition = [
     consumerGroupId: 'inventory-service-consumer',
     topicNames: ['order'],
     handler: producer => consumer => async message => {
-      let session = null
+      let session = {}
       try {
         console.log('consumer [inventory-service-consumer] received message')
         session = await db.startSession()
