@@ -1,8 +1,7 @@
 const path = require('path')
 const axios = require('axios')
 const compose = require('docker-compose')
-
-const service = require('../service')
+const service = require('../index')
 
 const SERVICE_ADDRESS = 'http://localhost:8080'
 const MAX_TIMEOUT = 30000

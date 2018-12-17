@@ -16,7 +16,7 @@ const config = convict({
   port: {
     doc: "The port to bind.",
     format: "port",
-    default: 8080,
+    default: 8081,
     env: "APP_PORT",
     arg: "port"
   },
@@ -34,6 +34,23 @@ const config = convict({
       format: String,
       default: "127.0.0.1:9092",
       env: "KAFKA_METADATA_BROKER_LIST"
+    }
+  },
+  enableAutomationTesting: {
+    doc: "Enable helpers for resetting db.",
+    format: Boolean,
+    default: true,
+    env: "ENABLE_AUTOMATION"
+  },
+  services: {
+    order: {
+      address: {
+        doc: "Order service address",
+        format: String,
+        default: "http://localhost:6001",
+        env: "SERVICE_ADDRESS_ORDER",
+        arg: "address"
+      }
     }
   }
 })
