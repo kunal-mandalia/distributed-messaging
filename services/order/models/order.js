@@ -1,7 +1,10 @@
 const db = require('./db')
 
 const Order = db.model('Order', {
-  id: String,
+  id: {
+    type: String,
+    unique: true
+  },
   customerId: String,
   totalPrice: Number,
   totalQuantity: Number,

@@ -24,7 +24,7 @@ const config = convict({
     connectionString: {
       doc: "The connection string including db name.",
       format: String,
-      default: "mongodb://127.0.0.1:27017/distributed-messaging",
+      default: "mongodb://localhost:27017/distributed-messaging",
       env: "DB_MONGO_CONNECTION_STRING"
     }
   },

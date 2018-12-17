@@ -8,4 +8,4 @@ services:
       - "27017:27017"
       - "28001:27017"
     volumes:
-      - './temp/volume/data:/data/db'
+      - '/data/db:/data/db'
