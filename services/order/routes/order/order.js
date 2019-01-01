@@ -2,6 +2,12 @@ const router = require('express').Router()
 const db = require('../../models/db')
 const { Order } = require('../../models')
 const { getProducer } = require('../../../shared/kafka/producers')
+const { encodeMessage, decodeMessage } = require('../../../shared/kafka/message')
+const { RESOURCE_MAP, OPERATION_MAP, MESSAGE_TYPE_MAP } = require('../../../shared/constants')
+
+const { ORDER } = RESOURCE_MAP
+const { CREATE } = OPERATION_MAP
+const { COMMAND } = MESSAGE_TYPE_MAP
 
 async function createOrder(order, session) {
   await Order.create([order], { session })
@@ -21,31 +27,18 @@ router.get('/:id', async (req, res) => {
 
 router.post('/', async (req, res) => {
   const { order } = req.body
-  let session = {}
   try {
-    session = await db.startSession()
-    await session.startTransaction()
-
     const producer = getProducer()
-
-    await createOrder(order, session)
-
-    const message = {
+    const message = encodeMessage({
       aggregateId: order.id,
-      resource: 'ORDER',
-      operation: 'CREATED',
-    }
-    const kafkaMessage = new Buffer(JSON.stringify(message))
-    producer.produce('order', -1, kafkaMessage, message.aggregateId)
-
-    await session.commitTransaction()
-    session.endSession()
-
+      resource: ORDER,
+      operation: CREATE,
+      type: COMMAND,
+      payload: { order }
+    })
+    producer.produce('order', -1, message, order.id)
     return res.status(200).json({ order })
   } catch (error) {
-    if (typeof session.abortTransaction === "function") {
-      await session.abortTransaction()
-    }
     return res.status(400).json({
       message: error.message
     })
