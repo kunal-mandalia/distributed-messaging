@@ -12,7 +12,8 @@ const Order = db.model('Order', {
     productId: String,
     price: Number,
     quantity: Number
-  }]
+  }],
+  processedMessages: [String]
 })
 
 module.exports = Order
