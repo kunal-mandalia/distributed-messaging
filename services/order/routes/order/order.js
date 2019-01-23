@@ -1,8 +1,7 @@
 const router = require('express').Router()
-const db = require('../../models/db')
 const { Order } = require('../../models')
 const { getProducer } = require('../../../shared/kafka/producers')
-const { encodeMessage, decodeMessage } = require('../../../shared/kafka/message')
+const { encodeMessage } = require('../../../shared/kafka/message')
 const { RESOURCE_MAP, OPERATION_MAP, MESSAGE_TYPE_MAP } = require('../../../shared/constants')
 
 const { ORDER } = RESOURCE_MAP
@@ -27,6 +26,7 @@ router.get('/:id', async (req, res) => {
 
 router.post('/', async (req, res) => {
   const { order } = req.body
+  console.log(`order post ${JSON.stringify(order)}`)
   try {
     const producer = getProducer()
     const message = encodeMessage({
