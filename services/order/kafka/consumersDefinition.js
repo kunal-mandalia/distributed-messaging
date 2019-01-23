@@ -1,9 +1,31 @@
 const { encodeMessage, decodeMessage } = require('../../shared/kafka/message')
 const { RESOURCE_MAP, OPERATION_MAP, MESSAGE_TYPE_MAP } = require('../../shared/constants')
+const { Order } = require('../models')
 
 const { ORDER } = RESOURCE_MAP
 const { CREATE, CREATED } = OPERATION_MAP
 const { COMMAND, EVENT } = MESSAGE_TYPE_MAP
+
+async function createOrder(decodedMessage) {
+  const { resource, type, operation, aggregateId, payload } = decodedMessage
+  const processedMessageName = `${type}:${resource}:${operation}:${aggregateId}`
+
+  const existingOrder = await Order.findOne({
+    processedMessages: processedMessageName
+  })
+
+  console.log(`existing order ${existingOrder}`)
+
+  if (existingOrder) {
+    console.log(`already processed message ${processedMessageName} [idempotent]`)
+    return
+  }
+
+  await Order.create({
+    ...payload.order,
+    processedMessages: [processedMessageName]
+  })
+}
 
 const consumersDefinition = [
   {
@@ -14,18 +36,13 @@ const consumersDefinition = [
       console.log(message)
       console.log(message.value.toString())
 
-      const { aggregateId, resource, operation, type, payload } = decodeMessage(message)
-
-      if (resource !== ORDER) {
-        console.log(`ignoring messaging ${aggregateId}`)
-        return
-      }
+      const decodedMessage = decodeMessage(message)
+      const { aggregateId, operation, type, payload } = decodedMessage
 
       if (operation === CREATE && type === COMMAND) {
 
-          // update db idempotently
+          await createOrder(decodedMessage)
           
-          // produce kafka message
           const eventMessage = encodeMessage({
             aggregateId,
             resource: ORDER,
@@ -35,17 +52,11 @@ const consumersDefinition = [
           })
           producer.produce('order', -1, eventMessage, aggregateId)
           
-          // ack message
           await consumer.commitMessage(message)
-        }
+          return
+      }
 
-        console.log(`unhandled message:
-          ${aggregateId}
-          ${resource}
-          ${operation}
-          ${type}
-          ${JSON.stringify(payload, null, 4)}
-        `)
+      console.log(`ignoring messaging ${aggregateId}`)
     }
   }
 ]
