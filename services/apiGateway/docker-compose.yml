@@ -3,4 +3,4 @@ services:
   stub-order:
     build: ../stub/order
     ports:
-      - "6001:8080"
+      - "8902:8080"

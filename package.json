@@ -1,0 +1,10 @@
+{
+    "scripts": {
+        "start-kafka-broker": "docker-compose -f ./docker-composition/docker-compose-kafka.yml up",
+        "start-persistence": "docker-compose -f ./docker-composition/docker-compose-persistence.yml up",
+        "start-service-api-gateway": "cd ./services/apiGateway && yarn install && APP_PORT=8900 node index",
+        "start-service-inventory": "cd ./services/inventory && yarn install && APP_PORT=8901 node index",
+        "start-service-order": "cd ./services/order && yarn install && APP_PORT=8902 node index",
+        "post-order": "cd ./services/apiGateway/routes/order && curl -H \"Content-Type: application/json\" -d @order.json -vPOST http://0.0.0.0:8900/order"
+    }
+}

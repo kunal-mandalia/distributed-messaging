@@ -47,7 +47,7 @@ const config = convict({
       address: {
         doc: "Order service address",
         format: String,
-        default: "http://localhost:6001",
+        default: "http://localhost:8902",
         env: "SERVICE_ADDRESS_ORDER",
         arg: "address"
       }

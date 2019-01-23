@@ -82,3 +82,13 @@ TOPIC
         CONSUMER
         -------
 
+### Development
+
+Start the dependencies:
+
+* Kafka broker: `yarn start-kafka-broker`
+* Persistence: `yarn start-persistence`
+
+Run individual services:
+
+* 

@@ -17,7 +17,7 @@ function encodeMessage({
 }
 
 function decodeMessage(encodedMessage) {
-  const decodedMessage = JSON.parse(encodedMessage)
+  const decodedMessage = JSON.parse(encodedMessage.value.toString())
   return decodedMessage
 }
 
