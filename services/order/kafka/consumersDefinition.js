@@ -1,4 +1,4 @@
-const { encodeMessage, decodeMessage } = require('../../shared/kafka/message')
+const { encodeMessage, decodeMessage, getDecodedMessageId } = require('../../shared/kafka/message')
 const { RESOURCE_MAP, OPERATION_MAP, MESSAGE_TYPE_MAP } = require('../../shared/constants')
 const { Order } = require('../models')
 
@@ -7,23 +7,23 @@ const { CREATE, CREATED } = OPERATION_MAP
 const { COMMAND, EVENT } = MESSAGE_TYPE_MAP
 
 async function createOrder(decodedMessage) {
-  const { resource, type, operation, aggregateId, payload } = decodedMessage
-  const processedMessageName = `${type}:${resource}:${operation}:${aggregateId}`
+  const { order } = decodedMessage.payload
+  const messageId = getDecodedMessageId(decodedMessage)
 
   const existingOrder = await Order.findOne({
-    processedMessages: processedMessageName
+    processedMessages: messageId
   })
 
   console.log(`existing order ${existingOrder}`)
 
   if (existingOrder) {
-    console.log(`already processed message ${processedMessageName} [idempotent]`)
+    console.log(`already processed message ${messageId} [idempotent]`)
     return
   }
 
   await Order.create({
-    ...payload.order,
-    processedMessages: [processedMessageName]
+    ...order,
+    processedMessages: [messageId]
   })
 }
 
