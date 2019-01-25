@@ -16,22 +16,29 @@ async function updateInventories({ messageId, order }) {
     }
   }, {})
   
-  const inventories = await Inventory.find({ productId: { $in: Object.keys(quantitySoldByProductId) } })
+  const inventories = await Inventory.find({
+    productId: { $in: Object.keys(quantitySoldByProductId) },
+    processedMessages: { $ne: messageId }
+  })
+
+  if (inventories.length === 0) {
+    console.log(`already processed message ${messageId}`)
+    return
+  }
 
   const inventoryUpdates = inventories.map(inventory => {
-    const payload = {
-      quantity: inventory.quantity - quantitySoldByProductId[inventory.productId],
-      processedMessages: [...inventory.processedMessages, messageId] 
-    }
     return Inventory.updateOne(
       { 
         productId: inventory.productId,
-        processedMessages: { $ne: messageId }
       },
-      payload
+      {
+        quantity: inventory.quantity - quantitySoldByProductId[inventory.productId],
+        processedMessages: [...inventory.processedMessages, messageId] 
+      }
     )
   })
   await Promise.all(inventoryUpdates)
+  console.log(`updated ${inventoryUpdates.length} inventories`)
 }
 
 const consumersDefinition = [
