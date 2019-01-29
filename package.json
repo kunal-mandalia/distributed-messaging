@@ -5,6 +5,18 @@
         "start-service-api-gateway": "cd ./services/apiGateway && yarn install && APP_PORT=8900 node index",
         "start-service-inventory": "cd ./services/inventory && yarn install && APP_PORT=8901 node index",
         "start-service-order": "cd ./services/order && yarn install && APP_PORT=8902 node index",
-        "post-order": "cd ./services/apiGateway/routes/order && curl -H \"Content-Type: application/json\" -d @order.json -vPOST http://0.0.0.0:8900/order"
-    }
+        "post-order": "cd ./services/apiGateway/routes/order && curl -H \"Content-Type: application/json\" -d @order.json -vPOST http://0.0.0.0:8900/order",
+        "lint": "npx eslint . --ext .js --fix"
+    },
+    "devDependencies": {
+        "eslint": "^5.12.1",
+        "eslint-config-standard": "^12.0.0",
+        "eslint-plugin-import": "^2.16.0",
+        "eslint-plugin-node": "^8.0.1",
+        "eslint-plugin-promise": "^4.0.1",
+        "eslint-plugin-standard": "^4.0.0"
+    },
+    "standard": {
+        "env": [ "jest" ]
+      }
 }
