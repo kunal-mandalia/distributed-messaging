@@ -18,7 +18,7 @@ app.get('/health', (req, res) => {
   })
 })
 
-async function start() {
+async function start () {
   return new Promise((resolve, reject) => {
     runningService = app.listen(config.get('port'), config.get('hostname'), () => {
       console.log(`API Gateway service running at http://${config.get('hostname')}:${config.get('port')}/\n`)
@@ -27,14 +27,15 @@ async function start() {
   })
 }
 
-async function close() {
+async function close () {
   return new Promise((resolve, reject) => {
     if (runningService) {
       runningService.close(() => {
       })
       resolve()
     }
-    reject()
+    const serviceNotAvailable = new Error(`apiGateway service not available`)
+    reject(serviceNotAvailable)
   })
 }
 

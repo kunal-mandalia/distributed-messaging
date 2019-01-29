@@ -18,7 +18,7 @@ app.get('/health', (req, res) => {
 })
 app.use('/automation-testing', routes.automationTesting)
 
-async function start() {
+async function start () {
   return new Promise(async (resolve, reject) => {
     try {
       const metadataBrokerList = config.get('kafka.metadataBrokerList')
@@ -37,19 +37,20 @@ async function start() {
         resolve()
       })
     } catch (error) {
-      console.log("Error starting inventory service: ", error.message)
-      reject(error.message)
+      console.log('Error starting inventory service: ', error.message)
+      reject(error)
     }
   })
 }
 
-async function close() {
+async function close () {
   return new Promise((resolve, reject) => {
     if (runningService) {
       runningService.close()
       resolve()
     }
-    reject("Inventory service is not running")
+    const serviceNotAvailable = new Error(`inventory service not available`)
+    reject(serviceNotAvailable)
   })
 }
 

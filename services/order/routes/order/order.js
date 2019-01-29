@@ -8,10 +8,6 @@ const { ORDER } = RESOURCE_MAP
 const { CREATE } = OPERATION_MAP
 const { COMMAND } = MESSAGE_TYPE_MAP
 
-async function createOrder(order, session) {
-  await Order.create([order], { session })
-}
-
 router.get('/:id', async (req, res) => {
   const id = req.params.id
   try {
