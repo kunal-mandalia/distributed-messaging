@@ -1,6 +1,7 @@
 {
   "order": {
-    "id": "ORDER_001",
+    "id": "00000-00000-00000-00000-00000",
+    "orderId": "ORDER_001",
     "customerId": "CUSTOMER_001",
     "totalPrice": 26,
     "totalQuantity": 7,

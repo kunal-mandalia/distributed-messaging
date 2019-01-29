@@ -13,7 +13,10 @@ const Order = db.model('Order', {
     price: Number,
     quantity: Number
   }],
-  processedMessages: [String]
+  processedMessages: [{
+    id: String,
+    status: String
+  }]
 })
 
 module.exports = Order

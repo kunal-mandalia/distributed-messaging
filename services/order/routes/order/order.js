@@ -26,13 +26,14 @@ router.post('/', async (req, res) => {
   try {
     const producer = getProducer()
     const message = encodeMessage({
-      aggregateId: order.id,
+      id: order.id,
+      aggregateId: order.orderId,
       resource: ORDER,
       operation: CREATE,
       type: COMMAND,
       payload: { order }
     })
-    producer.produce('order', -1, message, order.id)
+    producer.produce('order', -1, message, order.orderId)
     return res.status(200).json({ order })
   } catch (error) {
     return res.status(400).json({

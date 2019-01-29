@@ -8,6 +8,11 @@ const { ORDER, INVENTORY } = RESOURCE_MAP
 const { CREATED, UPDATED } = OPERATION_MAP
 const { EVENT } = MESSAGE_TYPE_MAP
 
+/**
+ *
+ * @param {*} param0
+ * @returns {string} processed message status: 'success' | 'failure' | 'pending' | 'ignored'
+ */
 async function updateInventories ({ messageId, order }) {
   const quantitySoldByProductId = order.items.reduce((acc, cur) => {
     return {
@@ -17,13 +22,20 @@ async function updateInventories ({ messageId, order }) {
   }, {})
 
   const inventories = await Inventory.find({
-    productId: { $in: Object.keys(quantitySoldByProductId) },
-    processedMessages: { $ne: messageId }
+    productId: { $in: Object.keys(quantitySoldByProductId) }
+    // processedMessages: { $ne: messageId }
   })
 
-  if (inventories.length === 0) {
-    console.log(`already processed message ${messageId}`)
-    return
+  // check if message has already been processed
+  const processedInventory = inventories.find(inventory => {
+    return inventory.processedMessages.find(processedMessage => {
+      return processedMessage.id === messageId
+    })
+  })
+
+  console.log(`processedInventory ${processedInventory}`)
+  if (processedInventory) {
+    return processedInventory.status
   }
 
   const inventoryUpdates = inventories.map(inventory => {
@@ -33,10 +45,12 @@ async function updateInventories ({ messageId, order }) {
       },
       {
         quantity: inventory.quantity - quantitySoldByProductId[inventory.productId],
-        processedMessages: [...inventory.processedMessages, messageId]
+        processedMessages: [...inventory.processedMessages, { id: messageId, status: 'success' }]
       }
     )
   })
+  // what happens if this fails?
+  // event message not produced
   await Promise.all(inventoryUpdates)
   console.log(`updated ${inventoryUpdates.length} inventories`)
 }
@@ -50,18 +64,22 @@ const consumersDefinition = [
         const decodedMessage = decodeMessage(message)
         const { aggregateId, resource, operation } = decodedMessage
         const messageId = getDecodedMessageId(decodedMessage)
+        let processedMessageStatus = 'pending'
 
         console.log(`consumer [inventory-service-consumer] received message ${messageId}`)
 
         if (resource === ORDER) {
           if (operation === CREATED) {
+            // order must exist
             const query = await axios.get(`${config.get('services.order.address')}/order/${aggregateId}`)
             const { order } = query.data
 
             if (!order) {
               console.log(`order ${aggregateId} not found`)
+              processedMessageStatus = 'bad_request'
             } else {
-              await updateInventories({
+              // update inventories idempotently
+              processedMessageStatus = await updateInventories({
                 messageId,
                 order
               })
@@ -73,7 +91,8 @@ const consumersDefinition = [
           aggregateId,
           resource: INVENTORY,
           operation: UPDATED,
-          type: EVENT
+          type: EVENT,
+          status: processedMessageStatus
         })
         producer.produce('inventory', -1, eventMessage, aggregateId)
         consumer.commitMessage(message)

@@ -7,7 +7,10 @@ const Inventory = db.model('Inventory', {
   },
   productId: String,
   quantity: Number,
-  processedMessages: [String]
+  processedMessages: [{
+    id: String,
+    status: String
+  }]
 })
 
 module.exports = Inventory

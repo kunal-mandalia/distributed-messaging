@@ -3,14 +3,16 @@ function encodeMessage ({
   resource,
   operation,
   type,
-  payload
+  payload,
+  status
 }) {
   const message = {
     aggregateId,
     resource,
     operation,
     type,
-    payload
+    payload,
+    status
   }
   const kafkaMessage = Buffer.from(JSON.stringify(message))
   return kafkaMessage
