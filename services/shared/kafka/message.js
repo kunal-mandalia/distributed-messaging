@@ -1,4 +1,4 @@
-function encodeMessage({
+function encodeMessage ({
   aggregateId,
   resource,
   operation,
@@ -16,12 +16,12 @@ function encodeMessage({
   return kafkaMessage
 }
 
-function decodeMessage(encodedMessage) {
+function decodeMessage (encodedMessage) {
   const decodedMessage = JSON.parse(encodedMessage.value.toString())
   return decodedMessage
 }
 
-function getDecodedMessageId(decodedMessage) {
+function getDecodedMessageId (decodedMessage) {
   const { resource, type, operation, aggregateId } = decodedMessage
   const id = `${type}:${resource}:${operation}:${aggregateId}`
   return id

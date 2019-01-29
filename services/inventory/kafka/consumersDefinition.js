@@ -8,14 +8,14 @@ const { ORDER, INVENTORY } = RESOURCE_MAP
 const { CREATED, UPDATED } = OPERATION_MAP
 const { EVENT } = MESSAGE_TYPE_MAP
 
-async function updateInventories({ messageId, order }) {
+async function updateInventories ({ messageId, order }) {
   const quantitySoldByProductId = order.items.reduce((acc, cur) => {
     return {
       ...acc,
       [cur.productId]: cur.quantity
     }
   }, {})
-  
+
   const inventories = await Inventory.find({
     productId: { $in: Object.keys(quantitySoldByProductId) },
     processedMessages: { $ne: messageId }
@@ -28,12 +28,12 @@ async function updateInventories({ messageId, order }) {
 
   const inventoryUpdates = inventories.map(inventory => {
     return Inventory.updateOne(
-      { 
-        productId: inventory.productId,
+      {
+        productId: inventory.productId
       },
       {
         quantity: inventory.quantity - quantitySoldByProductId[inventory.productId],
-        processedMessages: [...inventory.processedMessages, messageId] 
+        processedMessages: [...inventory.processedMessages, messageId]
       }
     )
   })

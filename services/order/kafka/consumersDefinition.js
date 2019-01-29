@@ -6,7 +6,7 @@ const { ORDER } = RESOURCE_MAP
 const { CREATE, CREATED } = OPERATION_MAP
 const { COMMAND, EVENT } = MESSAGE_TYPE_MAP
 
-async function createOrder(decodedMessage) {
+async function createOrder (decodedMessage) {
   const { order } = decodedMessage.payload
   const messageId = getDecodedMessageId(decodedMessage)
 
@@ -40,20 +40,19 @@ const consumersDefinition = [
       const { aggregateId, operation, type, payload } = decodedMessage
 
       if (operation === CREATE && type === COMMAND) {
+        await createOrder(decodedMessage)
 
-          await createOrder(decodedMessage)
-          
-          const eventMessage = encodeMessage({
-            aggregateId,
-            resource: ORDER,
-            operation: CREATED,
-            type: EVENT,
-            payload
-          })
-          producer.produce('order', -1, eventMessage, aggregateId)
-          
-          await consumer.commitMessage(message)
-          return
+        const eventMessage = encodeMessage({
+          aggregateId,
+          resource: ORDER,
+          operation: CREATED,
+          type: EVENT,
+          payload
+        })
+        producer.produce('order', -1, eventMessage, aggregateId)
+
+        await consumer.commitMessage(message)
+        return
       }
 
       console.log(`ignoring messaging ${aggregateId}`)

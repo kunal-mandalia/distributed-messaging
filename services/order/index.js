@@ -22,8 +22,8 @@ app.get('/health', (req, res) => {
 
 const metadataBrokerList = config.get('kafka.metadataBrokerList')
 
-async function start() {
-  return new Promise(async (resolve, reject) => {
+async function start () {
+  return new Promise(async (resolve) => {
     const { producer } = await defineProducers({
       Kafka,
       metadataBrokerList
@@ -41,7 +41,7 @@ async function start() {
   })
 }
 
-async function close() {
+async function close () {
   // TODO: shutdown kafka producers / consumers safely?
   return new Promise((resolve, reject) => {
     if (runningService) {
@@ -49,7 +49,8 @@ async function close() {
       })
       resolve()
     }
-    reject()
+    const serviceNotAvailable = new Error(`order service not available`)
+    reject(serviceNotAvailable)
   })
 }
 

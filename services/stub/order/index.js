@@ -33,14 +33,14 @@ app.post('/seed-data', (req, res) => {
 })
 
 app.get('/:id', (req, res) => {
-    const id = req.params.id
-    const order = db[id]
-    if (order) {
-      return res.status(200).json(order)
-    }
-    return res.status(204).json({
-      description: 'order not found'
-    })
+  const id = req.params.id
+  const order = db[id]
+  if (order) {
+    return res.status(200).json(order)
+  }
+  return res.status(204).json({
+    description: 'order not found'
+  })
 })
 
 app.listen(port, hostname, () => {

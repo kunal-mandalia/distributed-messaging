@@ -2,7 +2,7 @@ const Producer = require('./Producer')
 
 const producers = {}
 
-async function defineProducers({ Kafka, metadataBrokerList }) {
+async function defineProducers ({ Kafka, metadataBrokerList }) {
   try {
     const producer = await Producer({ Kafka, metadataBrokerList })
     producers.producer = producer

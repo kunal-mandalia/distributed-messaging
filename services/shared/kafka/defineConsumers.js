@@ -1,6 +1,6 @@
 const Consumer = require('./Consumer')
 
-async function defineConsumers({
+async function defineConsumers ({
   Kafka,
   producer,
   metadataBrokerList,

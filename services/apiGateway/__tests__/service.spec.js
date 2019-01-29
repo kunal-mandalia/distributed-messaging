@@ -7,7 +7,7 @@ const SERVICE_ADDRESS = 'http://localhost:8080'
 const MAX_TIMEOUT = 30000
 const DOCKER_COMPOSE_DIR = path.join(__dirname, '../')
 
-async function delay(ms = 2000) {
+async function delay (ms = 2000) {
   return new Promise((resolve) => {
     setTimeout(() => {
       resolve()
@@ -16,7 +16,7 @@ async function delay(ms = 2000) {
 }
 
 beforeAll(async () => {
-  const response = await compose.upAll({ cwd: DOCKER_COMPOSE_DIR, log: true })
+  await compose.upAll({ cwd: DOCKER_COMPOSE_DIR, log: true })
   await delay(5000)
 }, MAX_TIMEOUT)
 
@@ -29,7 +29,7 @@ afterEach(async () => {
 })
 
 afterAll(async () => {
-  const response = await compose.down({ cwd: DOCKER_COMPOSE_DIR, log: true })
+  await compose.down({ cwd: DOCKER_COMPOSE_DIR, log: true })
 }, MAX_TIMEOUT)
 
 describe('API Gateway Service', () => {
@@ -38,7 +38,7 @@ describe('API Gateway Service', () => {
       // arrange
       // act
       const response = await axios(`${SERVICE_ADDRESS}/health`)
-  
+
       // assert
       expect(response.data).toMatchObject({
         app: 'API Gateway',
