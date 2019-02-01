@@ -1,7 +1,7 @@
 const db = require('./db')
 
 const Order = db.model('Order', {
-  id: {
+  orderId: {
     type: String,
     unique: true
   },
@@ -15,7 +15,7 @@ const Order = db.model('Order', {
   }],
   processedMessages: [{
     id: String,
-    status: String
+    eventId: String
   }]
 })
 

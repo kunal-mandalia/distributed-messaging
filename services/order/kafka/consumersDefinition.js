@@ -1,3 +1,4 @@
+const uuidv4 = require('uuid/v4')
 const { encodeMessage, decodeMessage } = require('../../shared/kafka/message')
 const { RESOURCE_MAP, OPERATION_MAP, MESSAGE_TYPE_MAP } = require('../../shared/constants')
 const { Order } = require('../models')
@@ -9,7 +10,7 @@ const { COMMAND, EVENT } = MESSAGE_TYPE_MAP
 /**
  *
  * @param {Object} decodedMessage
- * @returns {Object} processedMessage detail { id, status }
+ * @returns {Object} processedMessage { id, status }
  */
 async function createOrder (decodedMessage) {
   const { id, payload } = decodedMessage
@@ -23,20 +24,18 @@ async function createOrder (decodedMessage) {
 
   if (existingOrder) {
     console.log(`already processed message ${id} [idempotent]`)
-    return { id, status: 'duplicate' }
+    return existingOrder.processedMessages.find(m => m.id === id)
   }
 
-  const newOrder = {
+  const processedMessage = { id, eventId: uuidv4() }
+  const orderPayload = {
     ...order,
-    processedMessages: [{ id, status: 'success' }]
+    processedMessages: [processedMessage]
   }
-  console.log(`creating order: `, JSON.stringify(newOrder, null, 4))
+  console.log(`creating order: `, JSON.stringify(orderPayload, null, 4))
 
-  await Order.create({
-    ...order,
-    processedMessages: [{ id, status: 'success' }]
-  })
-  return 'success'
+  await Order.create(orderPayload)
+  return processedMessage
 }
 
 const consumersDefinition = [
@@ -51,18 +50,17 @@ const consumersDefinition = [
       const decodedMessage = decodeMessage(message)
       const { aggregateId, operation, type, payload } = decodedMessage
 
-      console.log(`decoded message`)
       if (operation === CREATE && type === COMMAND) {
-        const { id, status } = await createOrder(decodedMessage)
+        const { status, eventId } = await createOrder(decodedMessage)
 
         const eventMessage = encodeMessage({
-          id,
+          id: eventId,
+          status,
           aggregateId,
           resource: ORDER,
           operation: CREATED,
           type: EVENT,
-          payload,
-          status
+          payload
         })
         producer.produce('order', -1, eventMessage, aggregateId)
       }

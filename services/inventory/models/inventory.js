@@ -9,7 +9,7 @@ const Inventory = db.model('Inventory', {
   quantity: Number,
   processedMessages: [{
     id: String,
-    status: String
+    eventId: String
   }]
 })
 

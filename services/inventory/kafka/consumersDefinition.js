@@ -1,7 +1,8 @@
 const axios = require('axios')
+const uuidv4 = require('uuid/v4')
 const { Inventory } = require('../models')
 const config = require('../config')
-const { encodeMessage, decodeMessage, getDecodedMessageId } = require('../../shared/kafka/message')
+const { encodeMessage, decodeMessage } = require('../../shared/kafka/message')
 const { RESOURCE_MAP, OPERATION_MAP, MESSAGE_TYPE_MAP } = require('../../shared/constants')
 
 const { ORDER, INVENTORY } = RESOURCE_MAP
@@ -13,7 +14,9 @@ const { EVENT } = MESSAGE_TYPE_MAP
  * @param {*} param0
  * @returns {string} processed message status: 'success' | 'failure' | 'pending' | 'ignored'
  */
-async function updateInventories ({ messageId, order }) {
+async function updateInventories ({ eventId, order }) {
+  let processedMessage = null
+
   const quantitySoldByProductId = order.items.reduce((acc, cur) => {
     return {
       ...acc,
@@ -23,21 +26,22 @@ async function updateInventories ({ messageId, order }) {
 
   const inventories = await Inventory.find({
     productId: { $in: Object.keys(quantitySoldByProductId) }
-    // processedMessages: { $ne: messageId }
   })
 
   // check if message has already been processed
   const processedInventory = inventories.find(inventory => {
-    return inventory.processedMessages.find(processedMessage => {
-      return processedMessage.id === messageId
+    processedMessage = inventory.processedMessages.find(processedMessage => {
+      return processedMessage.id === eventId
     })
+    return processedMessage
   })
 
   console.log(`processedInventory ${processedInventory}`)
   if (processedInventory) {
-    return processedInventory.status
+    return processedMessage
   }
 
+  processedMessage = { id: eventId, eventId: uuidv4() }
   const inventoryUpdates = inventories.map(inventory => {
     return Inventory.updateOne(
       {
@@ -45,14 +49,18 @@ async function updateInventories ({ messageId, order }) {
       },
       {
         quantity: inventory.quantity - quantitySoldByProductId[inventory.productId],
-        processedMessages: [...inventory.processedMessages, { id: messageId, status: 'success' }]
+        processedMessages: [...inventory.processedMessages, processedMessage]
       }
     )
   })
   // what happens if this fails?
   // event message not produced
   await Promise.all(inventoryUpdates)
-  console.log(`updated ${inventoryUpdates.length} inventories`)
+  console.log(`
+    updated ${inventoryUpdates.length} inventories
+    processedMessage ${JSON.stringify(processedMessage, null, 4)}
+  `)
+  return processedMessage
 }
 
 const consumersDefinition = [
@@ -62,11 +70,9 @@ const consumersDefinition = [
     handler: producer => consumer => async message => {
       try {
         const decodedMessage = decodeMessage(message)
-        const { aggregateId, resource, operation } = decodedMessage
-        const messageId = getDecodedMessageId(decodedMessage)
-        let processedMessageStatus = 'pending'
+        const { id, aggregateId, resource, operation } = decodedMessage
 
-        console.log(`consumer [inventory-service-consumer] received message ${messageId}`)
+        console.log(`consumer [inventory-service-consumer] received message ${JSON.stringify(decodedMessage, null, 4)}`)
 
         if (resource === ORDER) {
           if (operation === CREATED) {
@@ -76,25 +82,25 @@ const consumersDefinition = [
 
             if (!order) {
               console.log(`order ${aggregateId} not found`)
-              processedMessageStatus = 'bad_request'
+              return
             } else {
-              // update inventories idempotently
-              processedMessageStatus = await updateInventories({
-                messageId,
+              const processedMessage = await updateInventories({
+                eventId: id,
                 order
               })
+
+              const eventMessage = encodeMessage({
+                id: processedMessage.eventId,
+                aggregateId,
+                resource: INVENTORY,
+                operation: UPDATED,
+                type: EVENT
+              })
+              producer.produce('inventory', -1, eventMessage, aggregateId)
             }
           }
         }
 
-        const eventMessage = encodeMessage({
-          aggregateId,
-          resource: INVENTORY,
-          operation: UPDATED,
-          type: EVENT,
-          status: processedMessageStatus
-        })
-        producer.produce('inventory', -1, eventMessage, aggregateId)
         consumer.commitMessage(message)
       } catch (error) {
         console.log(`${error.message}`)

@@ -1,0 +1,16 @@
+{
+    "id": "a14e37d9-4eb1-41dd-95ae-bad1db2f9e9f",
+    "order": {
+        "orderId": "ORDER_002",
+        "customerId": "CUSTOMER_001",
+        "totalPrice": 20,
+        "totalQuantity": 2,
+        "items": [
+        {
+            "productId": "PRODUCT_001",
+            "price": 10,
+            "quantity": 2
+        }
+        ]
+    }
+}

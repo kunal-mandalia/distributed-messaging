@@ -8,10 +8,10 @@ const { ORDER } = RESOURCE_MAP
 const { CREATE } = OPERATION_MAP
 const { COMMAND } = MESSAGE_TYPE_MAP
 
-router.get('/:id', async (req, res) => {
-  const id = req.params.id
+router.get('/:orderId', async (req, res) => {
+  const { orderId } = req.params
   try {
-    const order = await Order.findOne({ id })
+    const order = await Order.findOne({ orderId })
     return res.status(200).json({ order })
   } catch (error) {
     return res.status(400).json({
@@ -21,12 +21,12 @@ router.get('/:id', async (req, res) => {
 })
 
 router.post('/', async (req, res) => {
-  const { order } = req.body
+  const { id, order } = req.body
   console.log(`order post ${JSON.stringify(order)}`)
   try {
     const producer = getProducer()
     const message = encodeMessage({
-      id: order.id,
+      id,
       aggregateId: order.orderId,
       resource: ORDER,
       operation: CREATE,
