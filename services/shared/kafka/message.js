@@ -1,4 +1,5 @@
 function encodeMessage ({
+  id,
   aggregateId,
   resource,
   operation,
@@ -6,6 +7,7 @@ function encodeMessage ({
   payload
 }) {
   const message = {
+    id,
     aggregateId,
     resource,
     operation,
@@ -21,14 +23,7 @@ function decodeMessage (encodedMessage) {
   return decodedMessage
 }
 
-function getDecodedMessageId (decodedMessage) {
-  const { resource, type, operation, aggregateId } = decodedMessage
-  const id = `${type}:${resource}:${operation}:${aggregateId}`
-  return id
-}
-
 module.exports = {
   encodeMessage,
-  decodeMessage,
-  getDecodedMessageId
+  decodeMessage
 }

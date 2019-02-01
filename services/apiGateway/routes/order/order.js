@@ -18,11 +18,11 @@ router.get('/:id', async (req, res) => {
 
 router.post('/', async (req, res) => {
   try {
-    const { order } = req.body
+    const { id, order } = req.body
     console.log(`api gateway received order ${JSON.stringify(order)}`)
-    const result = await axios.post(`${orderServiceAddress}/order`, { order })
+    const result = await axios.post(`${orderServiceAddress}/order`, { id, order })
     return res.status(result.status).json({
-      order
+      id, order
     })
   } catch (error) {
     return res.status(400).json({ message: error.message })

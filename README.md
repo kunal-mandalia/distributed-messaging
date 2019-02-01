@@ -1,94 +1,49 @@
 # distributed-messaging
-Using messages between microservices to achieve an available, partition tolerant, eventually consistent system 
+Using messages to communicate between microservices to achieve an available, partition tolerant, eventually consistent system 
 
 ## Overview
 
-This app consists of a set of microservices representing an eCommerce app. How the services are able to communicate with each other is the focus of this project. E.g. when an Order is placed, Accont and Delivery services must be notified. In the case of either subscriber service experiencing a network partition and subsequently recovering from the partition the event it subscribes to should be processed.
+This app models the canonical online store. It starts small with two domain services; the Order service, and the Inventory service. Each service reacts to events e.g. when an Order is created an order created event is produced, the Inventory service consumes this event and updates the stock as per the order.
+
+What happens if the Inventory service is offline? Or if there isn't enough stock? Designing a system which can tolerate this and eventually recover to handle the flow of the Order is the focus of this project.
+
+There's an emphasis placed on ensuring messages are processed in an idempotent way since we won't guarantee exactly once delivery of messages.
 
 ## Design Decisions
 
-Command Query Response Segregation (CQRS) to handle mutations by way of async Commands, queries will read from the microservice persistence layer in the usual way.
+Martin Fowler categorises the [many meanings of "event-driven" architecture](https://www.youtube.com/watch?v=STKCRSUsyP0). The architecture in this app aligns closely with what he calls "Event Notification".
 
-Domain Driven Design (DDD) to identify aggregate roots among domain objects so that Commands may be constructed around their bounded context.
+While the "Event Notification" pattern shows how services will communicate with each other, what they communicate i.e. the event message payload will be guided by Domain Driven Design (DDD). This means exposing a common set of high level message attributes which allow services to react to Events but not enough for data to bleed across bounded contexts.
 
-### Flow of Control
+Finally a couple of terms from CQRS will be used to help identify the different intent of messages; Commands for when the user makes a state changing request e.g. placing an order, and Events for emitting a notification following a change to a service e.g. inventory updated.
 
-#### Queries
-
-* User requests data and send a RESTful request over http to API Gateway service
-* API Gateway service requests a resource from a microservice over http
-* API Gateway service returns a JSON payload
-
-#### Commands
-
-* User requests a state change by sending a RESTful request over http to API Gateway service
-* API Gateway service requests a mutation on a Domain Service (microservice) over http
-* Domain Service queues a Command and returns a status OK
-* API Gateway service returns with a status OK
-* (optional: the clientside may update its state optimistically)
-* Command is consumed from Broker by the listening Domain Service
-  * On failure the consumer will retry consuming the command after a delay
-  * On success the state relating to the aggregate is updated and an Event representing this state change is published
-    * Subscribers e.g. the Inventory Domain Service may react to the Event by updating stock and publishing an associated Event 
-
-### Messaging
-
-Kafka Broker
-Kafka Producer
-Kafka Consumer
-
-Topics:
-- Order
-- Order
-- Inventory
-
-Flow:
-
-AggregateId should be CustomerId?
-
-- Customer completes order (ORDER_CONFIRMATION_SUCCESS): success
-    - Payment takes payment (PAYMENT_PROCESSED_SUCCESS): success
-        - Inventory updates stock (INVENTORY_UPDATED_SUCCESS): success
-        - Delivery schedules a drop (DELIVERY_SCHEDULED_SUCCESS): success
-
-- Customer completes order (ORDER_CONFIRMATION_ERROR): error
-
-- Customer completes order (ORDER_PLACED_SUCCESS): success
-    - Payment takes payment (PAYMENT_PROCESSED_ERROR): error
-        - Order rollback (ORDER_PLACED_ROLLBACK)
-
-- Customer completes order: ORDER_CONFIRMATION_SUCCESS
-    - Payment takes payment: PAYMENT_CHARGE_SUCCESS
-        - Inventory updates stock: INVENTORY_UPDATE_SUCCESS
-        - Delivery schedules a drop: DELIVERY_SCHEDULED_ERROR
-            - Inventory update rollback: INVENTORY_UPDATE_ROLLBACK
-            - Payment charge rollback: PAYMENT_CHARGE_ROLLBACK
-            - Order confirmation rollback: ORDER_CONFIRMATION_ROLLBACK
-
-
-Processing messages in the right order:
-- AggregateId = CustomerId ensures that within each topic, messages are in order
-    
-
--------
-TOPIC
--------
-
-        -------
-        CONSUMER
-        -------
-
-        -------
-        CONSUMER
-        -------
+Kafka is at the heart of the system so concepts like topics, partitions,offset, etc. play a key role.
 
 ### Development
 
-Start the dependencies:
+Run the infrastructure:
 
-* Kafka broker: `yarn start-kafka-broker`
+* Kafka Broker: `yarn start-kafka-broker`
 * Persistence: `yarn start-persistence`
 
 Run individual services:
 
-* 
+* API gateway: `yarn start-service-api-gateway`
+* Order domain service: `yarn start-service-order`
+* Inventory domain service: `yarn start-service-inventory`
+
+
+Seed data:
+
+* Inventory: `curl -XPOST http://localhost:8901/automation-testing/seed`
+
+Create an order:
+
+* ORDER_001: `yarn post-order-1`
+* ORDER_002: `yarn post-order-2`
+
+Creating an order is idempotent; it'll only be processed once. Therefore ORDER_001 may be placed many times but stock will only adjust the first time.
+
+### Test
+
+The app consists of a set of services each with their own set of tests. Run `yarn test` in the context of a service to run tests.

@@ -1,7 +1,7 @@
 const db = require('./db')
 
 const Order = db.model('Order', {
-  id: {
+  orderId: {
     type: String,
     unique: true
   },
@@ -13,7 +13,10 @@ const Order = db.model('Order', {
     price: Number,
     quantity: Number
   }],
-  processedMessages: [String]
+  processedMessages: [{
+    id: String,
+    eventId: String
+  }]
 })
 
 module.exports = Order
