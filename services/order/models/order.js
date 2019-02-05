@@ -1,9 +1,20 @@
 const db = require('./db')
+const { ORDER_STATUS_MAP } = require('../constants')
+
+const { PENDING, RESERVED, COMPLETE } = ORDER_STATUS_MAP
 
 const Order = db.model('Order', {
   orderId: {
     type: String,
     unique: true
+  },
+  status: {
+    type: String,
+    enum: [
+      PENDING,
+      RESERVED,
+      COMPLETE
+    ]
   },
   customerId: String,
   totalPrice: Number,
@@ -15,7 +26,8 @@ const Order = db.model('Order', {
   }],
   processedMessages: [{
     id: String,
-    eventId: String
+    eventId: String,
+    operation: String
   }]
 })
 

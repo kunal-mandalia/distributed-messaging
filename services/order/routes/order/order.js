@@ -2,7 +2,7 @@ const router = require('express').Router()
 const { Order } = require('../../models')
 const { getProducer } = require('../../../shared/kafka/producers')
 const { encodeMessage } = require('../../../shared/kafka/message')
-const { RESOURCE_MAP, OPERATION_MAP, MESSAGE_TYPE_MAP } = require('../../../shared/constants')
+const { RESOURCE_MAP, OPERATION_MAP, MESSAGE_TYPE_MAP, TOPIC_MAP } = require('../../../shared/constants')
 
 const { ORDER } = RESOURCE_MAP
 const { CREATE } = OPERATION_MAP
@@ -33,7 +33,7 @@ router.post('/', async (req, res) => {
       type: COMMAND,
       payload: { order }
     })
-    producer.produce('order', -1, message, order.orderId)
+    producer.produce(TOPIC_MAP.ORDER, -1, message, order.orderId)
     return res.status(200).json({ order })
   } catch (error) {
     return res.status(400).json({

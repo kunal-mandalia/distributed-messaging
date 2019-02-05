@@ -16,8 +16,20 @@ const MESSAGE_TYPE_MAP = {
   EVENT: 'EVENT'
 }
 
+const TOPIC_MAP = {
+  ORDER: 'ORDER',
+  INVENTORY: 'INVENTORY'
+}
+
+const CONSUMER_GROUP_MAP = {
+  ORDER: 'order-service-consumer',
+  INVENTORY: 'inventory-service-consumer'
+}
+
 module.exports = {
   RESOURCE_MAP,
   OPERATION_MAP,
-  MESSAGE_TYPE_MAP
+  MESSAGE_TYPE_MAP,
+  TOPIC_MAP,
+  CONSUMER_GROUP_MAP
 }
