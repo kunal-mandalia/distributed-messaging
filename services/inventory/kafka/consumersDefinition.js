@@ -3,7 +3,7 @@ const uuidv4 = require('uuid/v4')
 const { Inventory } = require('../models')
 const config = require('../config')
 const { encodeMessage, decodeMessage } = require('../../shared/kafka/message')
-const { RESOURCE_MAP, OPERATION_MAP, MESSAGE_TYPE_MAP } = require('../../shared/constants')
+const { RESOURCE_MAP, OPERATION_MAP, MESSAGE_TYPE_MAP, TOPIC_MAP, CONSUMER_GROUP_MAP } = require('../../shared/constants')
 
 const { ORDER, INVENTORY } = RESOURCE_MAP
 const { CREATED, UPDATED } = OPERATION_MAP
@@ -12,7 +12,7 @@ const { EVENT } = MESSAGE_TYPE_MAP
 /**
  *
  * @param {*} param0
- * @returns {string} processed message status: 'success' | 'failure' | 'pending' | 'ignored'
+ * @returns {object} processedMessage
  */
 async function updateInventories ({ eventId, order }) {
   let processedMessage = null
@@ -28,7 +28,6 @@ async function updateInventories ({ eventId, order }) {
     productId: { $in: Object.keys(quantitySoldByProductId) }
   })
 
-  // check if message has already been processed
   const processedInventory = inventories.find(inventory => {
     processedMessage = inventory.processedMessages.find(processedMessage => {
       return processedMessage.id === eventId
@@ -36,12 +35,11 @@ async function updateInventories ({ eventId, order }) {
     return processedMessage
   })
 
-  console.log(`processedInventory ${processedInventory}`)
   if (processedInventory) {
     return processedMessage
   }
 
-  processedMessage = { id: eventId, eventId: uuidv4() }
+  processedMessage = { id: eventId, eventId: uuidv4(), operation: UPDATED }
   const inventoryUpdates = inventories.map(inventory => {
     return Inventory.updateOne(
       {
@@ -53,30 +51,23 @@ async function updateInventories ({ eventId, order }) {
       }
     )
   })
-  // what happens if this fails?
-  // event message not produced
   await Promise.all(inventoryUpdates)
-  console.log(`
-    updated ${inventoryUpdates.length} inventories
-    processedMessage ${JSON.stringify(processedMessage, null, 4)}
-  `)
   return processedMessage
 }
 
 const consumersDefinition = [
   {
-    consumerGroupId: 'inventory-service-consumer',
-    topicNames: ['order'],
+    consumerGroupId: CONSUMER_GROUP_MAP.INVENTORY,
+    topicNames: [TOPIC_MAP.ORDER],
     handler: producer => consumer => async message => {
+      console.log(`consumer [inventory-service-consumer] received message`)
+
       try {
         const decodedMessage = decodeMessage(message)
         const { id, aggregateId, resource, operation } = decodedMessage
 
-        console.log(`consumer [inventory-service-consumer] received message ${JSON.stringify(decodedMessage, null, 4)}`)
-
         if (resource === ORDER) {
           if (operation === CREATED) {
-            // order must exist
             const query = await axios.get(`${config.get('services.order.address')}/order/${aggregateId}`)
             const { order } = query.data
 
@@ -93,10 +84,10 @@ const consumersDefinition = [
                 id: processedMessage.eventId,
                 aggregateId,
                 resource: INVENTORY,
-                operation: UPDATED,
+                operation: processedMessage.operation,
                 type: EVENT
               })
-              producer.produce('inventory', -1, eventMessage, aggregateId)
+              producer.produce(TOPIC_MAP.INVENTORY, -1, eventMessage, aggregateId)
             }
           }
         }
