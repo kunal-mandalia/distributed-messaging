@@ -23,7 +23,8 @@ const TOPIC_MAP = {
 
 const CONSUMER_GROUP_MAP = {
   ORDER: 'order-service-consumer',
-  INVENTORY: 'inventory-service-consumer'
+  INVENTORY: 'inventory-service-consumer',
+  NOTIFICATION: 'notification-service-consumer'
 }
 
 module.exports = {
