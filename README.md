@@ -11,9 +11,9 @@ There's an emphasis placed on ensuring messages are processed in an idempotent w
 
 ## Design Decisions
 
-Martin Fowler categorises the [many meanings of "event-driven" architecture](https://www.youtube.com/watch?v=STKCRSUsyP0). The architecture in this app aligns closely with what he calls "Event Notification".
+Martin Fowler categorises the [many meanings of "event-driven" architecture](https://www.youtube.com/watch?v=STKCRSUsyP0). The architecture in this app aligns most closely with what is referred to as "Event Carried State Transfer".
 
-While the "Event Notification" pattern shows how services will communicate with each other, what they communicate i.e. the event message payload will be guided by Domain Driven Design (DDD). This means exposing a common set of high level message attributes which allow services to react to Events but not enough for data to bleed across bounded contexts.
+While the "Event Carried State Transfer" pattern shows how services will communicate with each other, what they communicate i.e. the event message payload will be guided by Domain Driven Design (DDD). This means exposing a common set of high level message attributes which allow services to react to Events but not enough for data to bleed across bounded contexts.
 
 Finally a couple of terms from CQRS will be used to help identify the different intent of messages; Commands for when the user makes a state changing request e.g. placing an order, and Events for emitting a notification following a change to a service e.g. inventory updated.
 

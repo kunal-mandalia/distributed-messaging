@@ -1,7 +1,7 @@
 const db = require('./db')
 
 const Inventory = db.model('Inventory', {
-  id: {
+  inventoryId: {
     type: String,
     unique: true
   },
@@ -10,7 +10,9 @@ const Inventory = db.model('Inventory', {
   processedMessages: [{
     id: String,
     eventId: String,
-    operation: String
+    operation: String,
+    subject: String,
+    data: Object
   }]
 })
 

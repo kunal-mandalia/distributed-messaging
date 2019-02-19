@@ -1,13 +1,14 @@
 const uuidv4 = require('uuid/v4')
 const { Order } = require('../models')
 const { encodeMessage, decodeMessage } = require('../../shared/kafka/message')
-const { RESOURCE_MAP, OPERATION_MAP, MESSAGE_TYPE_MAP, TOPIC_MAP, CONSUMER_GROUP_MAP } = require('../../shared/constants')
+const { RESOURCE_MAP, OPERATION_MAP, MESSAGE_TYPE_MAP, TOPIC_MAP, CONSUMER_GROUP_MAP, SUBJECT_MAP } = require('../../shared/constants')
 const { ORDER_STATUS_MAP } = require('../constants')
 
 const { ORDER } = RESOURCE_MAP
-const { CREATE, CREATED, UPDATED } = OPERATION_MAP
-const { COMMAND, EVENT } = MESSAGE_TYPE_MAP
+const { CREATED, UPDATED } = OPERATION_MAP
+const { EVENT } = MESSAGE_TYPE_MAP
 const { PENDING, RESERVED } = ORDER_STATUS_MAP
+const { ORDER_CREATE, ORDER_CREATED, INVENTORY_RESERVED } = SUBJECT_MAP
 
 /**
  *
@@ -15,8 +16,8 @@ const { PENDING, RESERVED } = ORDER_STATUS_MAP
  * @returns {Object} processedMessage { id, eventId }
  */
 async function createOrder (decodedMessage) {
-  const { id, payload } = decodedMessage
-  const { order } = payload
+  const { id, data } = decodedMessage
+  const { order } = data
 
   const existingOrder = await Order.findOne({
     'processedMessages.id': id
@@ -26,8 +27,13 @@ async function createOrder (decodedMessage) {
     return existingOrder.processedMessages.find(m => m.id === id)
   }
 
-  const processedMessage = { id, eventId: uuidv4(), operation: CREATED }
-  console.log('>>> createOrder ...')
+  const processedMessage = {
+    id,
+    eventId: uuidv4(),
+    operation: CREATED,
+    subject: ORDER_CREATED,
+    data: order
+  }
   const orderPayload = {
     ...order,
     status: PENDING,
@@ -48,7 +54,13 @@ async function updateOrderStatus (decodedMessage) {
     return processedOrder.processedMessages.find(m => m.id === id)
   }
 
-  const processedMessage = { id, eventId: uuidv4(), operation: UPDATED }
+  const processedMessage = {
+    id,
+    eventId: uuidv4(),
+    operation: UPDATED,
+    subject: INVENTORY_RESERVED,
+    data: { status: RESERVED }
+  }
   const order = await Order.findOne({ orderId: aggregateId })
   await Order.updateOne({
     orderId: aggregateId
@@ -67,18 +79,19 @@ const consumersDefinition = [
       console.log('order-service-consumer received message on order topic')
 
       const decodedMessage = decodeMessage(message)
-      const { aggregateId, operation, type, payload } = decodedMessage
+      const { aggregateId, subject } = decodedMessage
 
-      if (operation === CREATE && type === COMMAND) {
+      if (subject === ORDER_CREATE) {
         const processedMessage = await createOrder(decodedMessage)
 
         const eventMessage = encodeMessage({
           id: processedMessage.eventId,
+          operation: processedMessage.operation,
+          subject: processedMessage.subject,
+          data: processedMessage.data,
           aggregateId,
           resource: ORDER,
-          operation: processedMessage.operation,
-          type: EVENT,
-          payload
+          type: EVENT
         })
         producer.produce(TOPIC_MAP.ORDER, -1, eventMessage, aggregateId)
       }
@@ -92,16 +105,18 @@ const consumersDefinition = [
       console.log('order-service-consumer received message on inventory topic')
 
       const decodedMessage = decodeMessage(message)
-      const { aggregateId, operation, type } = decodedMessage
+      const { aggregateId, subject } = decodedMessage
 
-      if (operation === UPDATED && type === EVENT) {
+      if (subject === INVENTORY_RESERVED) {
         const processedMessage = await updateOrderStatus(decodedMessage)
 
         const eventMessage = encodeMessage({
           id: processedMessage.eventId,
+          subject: processedMessage.subject,
+          data: processedMessage.data,
+          operation: processedMessage.operation,
           aggregateId,
           resource: ORDER,
-          operation: processedMessage.operation,
           type: EVENT
         })
         producer.produce(TOPIC_MAP.ORDER, -1, eventMessage, aggregateId)

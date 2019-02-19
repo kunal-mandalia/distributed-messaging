@@ -4,7 +4,8 @@ function encodeMessage ({
   resource,
   operation,
   type,
-  payload
+  subject,
+  data
 }) {
   const message = {
     id,
@@ -12,16 +13,17 @@ function encodeMessage ({
     resource,
     operation,
     type,
-    payload
+    subject,
+    data
   }
   const kafkaMessage = Buffer.from(JSON.stringify(message))
-  console.log('encodeMessage', JSON.stringify(message, null, 4))
+  console.log('encodeMessage()', JSON.stringify(message, null, 4))
   return kafkaMessage
 }
 
 function decodeMessage (encodedMessage) {
   const decodedMessage = JSON.parse(encodedMessage.value.toString())
-  console.log('decodedMessage', JSON.stringify(decodedMessage, null, 4))
+  console.log('decodedMessage()', JSON.stringify(decodedMessage, null, 4))
   return decodedMessage
 }
 

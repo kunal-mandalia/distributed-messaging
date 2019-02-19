@@ -27,7 +27,9 @@ const Order = db.model('Order', {
   processedMessages: [{
     id: String,
     eventId: String,
-    operation: String
+    operation: String,
+    subject: String,
+    data: Object
   }]
 })
 
