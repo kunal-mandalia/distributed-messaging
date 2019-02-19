@@ -108,11 +108,6 @@ const consumersDefinition = [
       const { aggregateId, subject } = decodedMessage
 
       if (subject === INVENTORY_RESERVED) {
-        // what if inventory could be updated by multiple
-        // causes e.g. stock_reserved, stock_replenished
-        // subject: INVENTORY_RESERVED
-        // subject: INVENTORY_REPLENISHED
-        // subject: INVENTORY_RESERVE_FAILED
         const processedMessage = await updateOrderStatus(decodedMessage)
 
         const eventMessage = encodeMessage({
