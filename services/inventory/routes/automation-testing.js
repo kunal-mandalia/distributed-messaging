@@ -11,7 +11,7 @@ function seedData () {
     {
       insertOne: {
         'document': {
-          id: 'INVENTORY_001',
+          inventoryId: 'INVENTORY_001',
           productId: 'PRODUCT_001',
           quantity: 10
         }
@@ -20,7 +20,7 @@ function seedData () {
     {
       insertOne: {
         'document': {
-          id: 'INVENTORY_002',
+          inventoryId: 'INVENTORY_002',
           productId: 'PRODUCT_002',
           quantity: 15
         }
