@@ -1,5 +1,5 @@
 const { connect } = require('./db/db')
-const { dropDatabase } = require('./db/util')
+const { dropCollections, seedDatabase, delay } = require('./db/util')
 
 let db
 
@@ -8,14 +8,15 @@ beforeAll(async () => {
 })
 
 beforeEach(async () => {
-  await dropDatabase(db)
+  await dropCollections(db)
 })
 
 afterEach(async () => {
-  // await seedDatabase()
+  await seedDatabase(db)
 })
 
 afterAll(async () => {
+  await delay(100)
   await db.close()
 })
 
