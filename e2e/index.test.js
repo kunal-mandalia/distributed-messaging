@@ -22,7 +22,7 @@ afterAll(async () => {
 
 describe(`distributed-messaging`, () => {
   describe(`create valid order`, () => {
-    it(`should pass`, () => {
+    it(`should create order`, () => {
       // arrange
 
       // act
