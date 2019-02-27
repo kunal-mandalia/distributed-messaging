@@ -1,5 +1,7 @@
+const axios = require('axios')
 const { connect } = require('./db/db')
 const { dropCollections, seedDatabase, delay } = require('./db/util')
+const endpoints = require('./endpoints')
 
 let db
 
@@ -21,14 +23,19 @@ afterAll(async () => {
 })
 
 describe(`distributed-messaging`, () => {
-  describe(`create valid order`, () => {
-    it(`should create order`, () => {
+  describe(`api-gateway service`, () => {
+    it(`should be healthy`, async () => {
       // arrange
-
       // act
+      const response = await axios.get(
+        `${endpoints.apiGateway}/health`,
+        {
+          headers: { 'content-type': 'application/json' }
+        }
+      )
 
       // assert
-      expect(true).toBe(true)
+      expect(response.data).toEqual({ 'app': 'API Gateway', 'status': 'UP' })
     })
   })
 })
