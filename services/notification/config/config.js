@@ -10,7 +10,7 @@ const config = convict({
   hostname: {
     doc: 'The IP address to bind.',
     format: 'ipaddress',
-    default: '127.0.0.1',
+    default: '0.0.0.0',
     env: 'APP_HOSTNAME'
   },
   port: {
@@ -19,6 +19,13 @@ const config = convict({
     default: 8903,
     env: 'APP_PORT',
     arg: 'port'
+  },
+  webSocketPort: {
+    doc: 'The websocket port to bind.',
+    format: 'port',
+    default: 8904,
+    env: 'APP_PORT_WEBSOCKET',
+    arg: 'websocket-port'
   },
   mongo: {
     connectionString: {

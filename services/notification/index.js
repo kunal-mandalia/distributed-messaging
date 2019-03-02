@@ -6,7 +6,6 @@ const config = require('./config')
 const defineConsumers = require('../shared/kafka/defineConsumers')
 const { defineProducers } = require('../shared/kafka/producers')
 const { generateConsumersDefinition } = require('./kafka/consumersDefinition')
-// const routes = require('./routes')
 
 let wss
 let runningService
@@ -22,7 +21,12 @@ app.get('/health', (req, res) => {
 function initialiseWebsockets () {
   return new Promise((resolve) => {
     wss = new WebSocket.Server({
-      port: config.get('port')
+      host: config.get('hostname'),
+      port: config.get('webSocketPort')
+    })
+
+    wss.on('listening', () => {
+      console.log(`notification websocket server listening on ${config.get('hostname')}:${config.get('webSocketPort')}`)
     })
 
     wss.on('connection', function connection (ws, req) {
@@ -31,7 +35,7 @@ function initialiseWebsockets () {
         console.log('received: %s', message)
       })
 
-      ws.send('something')
+      ws.send('connected to notifications service')
     })
     resolve()
   })
@@ -54,11 +58,11 @@ async function start () {
         consumersDefinition
       })
       runningService = app.listen(config.get('port'), config.get('hostname'), () => {
-        console.log(`Inventory service running at http://${config.get('hostname')}:${config.get('port')}/`)
+        console.log(`notification service running at http://${config.get('hostname')}:${config.get('port')}/`)
         resolve()
       })
     } catch (error) {
-      console.log('Error starting inventory service: ', error.message)
+      console.log('Error starting notification service: ', error.message)
       reject(error)
     }
   })
@@ -70,7 +74,7 @@ async function close () {
       runningService.close()
       resolve()
     }
-    const serviceNotAvailable = new Error(`inventory service not available`)
+    const serviceNotAvailable = new Error(`notification service not available`)
     reject(serviceNotAvailable)
   })
 }
