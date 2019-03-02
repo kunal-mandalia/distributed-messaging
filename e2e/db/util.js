@@ -5,7 +5,7 @@ async function dropCollections (db) {
   const dropCollections = collectionsName.map(collection =>
     dbo.collection(collection).drop()
   )
-  return Promise.all(dropCollections)
+  await Promise.all(dropCollections)
 }
 
 function getSeedInventories () {
@@ -26,20 +26,14 @@ function getSeedInventories () {
 async function seedDatabase (db) {
   const dbo = db.db('distributed-messaging')
   const collections = ['inventories', 'orders']
-  collections.forEach(async collection => {
-    await dbo.createCollection(collection)
-  })
+  const createCollections = collections.map(async collection =>
+    dbo.createCollection(collection)
+  )
+  await Promise.all(createCollections)
   await dbo.collection('inventories').insertMany(getSeedInventories())
-}
-
-async function delay (ms = 1000) {
-  return new Promise(resolve => {
-    setTimeout(() => { resolve() }, ms)
-  })
 }
 
 module.exports = {
   dropCollections,
-  seedDatabase,
-  delay
+  seedDatabase
 }
