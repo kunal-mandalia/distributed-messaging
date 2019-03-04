@@ -1,5 +1,9 @@
+const { readyOrDie } = require('../networking')
+
 function Producer ({ Kafka, metadataBrokerList }) {
-  return new Promise((resolve, reject) => {
+  return new Promise(async (resolve, reject) => {
+    let isReady = false
+
     const producer = new Kafka.Producer({
       // 'debug' : 'all',
       'metadata.broker.list': metadataBrokerList,
@@ -21,6 +25,7 @@ function Producer ({ Kafka, metadataBrokerList }) {
 
     producer.on('ready', function (arg) {
       console.log('producer ready.' + JSON.stringify(arg))
+      isReady = true
       resolve(producer)
     })
 
@@ -29,6 +34,11 @@ function Producer ({ Kafka, metadataBrokerList }) {
     })
 
     producer.connect()
+
+    await readyOrDie({
+      getIsReady: () => isReady,
+      timeoutSeconds: 10
+    })
   })
 }
 

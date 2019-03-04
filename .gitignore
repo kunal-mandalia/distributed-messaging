@@ -62,3 +62,6 @@ typings/
 
 # Ignore any temp directories. Used for ephemeral volumes
 **/temp/
+
+# Throw away notes
+*.notes

@@ -1,0 +1,15 @@
+FROM node:10.14.0-alpine
+
+RUN apk --no-cache add \
+      bash \
+      curl
+
+COPY apiGateway /services
+
+WORKDIR /services
+
+RUN npm install
+
+EXPOSE 8090
+
+CMD ["node", "index.js"]

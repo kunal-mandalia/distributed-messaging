@@ -1,32 +1,9 @@
-version: '3'
+version: '3.5'
 services:
-  # api-gateway:
-  #   build: ./services/apiGateway
-  #   ports:
-  #     - "5000:8080"
-
-  # order:
-  #   build: ./services/order
-  #   ports:
-  #     - "8902:8080"
-  #   depends_on:
-  #     - "mongo"
-  #   restart: "on-failure"
-
-  # inventory:
-  #   build:
-  #     context: ..
-  #     dockerfile: ./services/inventory/Dockerfile
-  #   ports:
-  #     - "6002:8080"
-  #   restart: "on-failure"
-
   mongo:
     image: mongo:3.4.19-jessie
     restart: always
     ports:
       - "27017:27017"
-
-volumes:
-  mongodb_master_data:
-    driver: local
+    extra_hosts:
+      - "localhost: 127.0.0.1"

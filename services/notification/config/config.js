@@ -27,19 +27,11 @@ const config = convict({
     env: 'APP_PORT_WEBSOCKET',
     arg: 'websocket-port'
   },
-  mongo: {
-    connectionString: {
-      doc: 'The connection string including db name.',
-      format: String,
-      default: 'mongodb://localhost:27017/distributed-messaging',
-      env: 'DB_MONGO_CONNECTION_STRING'
-    }
-  },
   kafka: {
     metadataBrokerList: {
       doc: 'The connection string to the Kafka broker.',
       format: String,
-      default: '127.0.0.1:9092',
+      default: '0.0.0.0:9092',
       env: 'KAFKA_METADATA_BROKER_LIST'
     }
   }

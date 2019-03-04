@@ -1,21 +1,23 @@
 {
-    "id": "72029ae3-9876-4d2f-a0ae-aaee86b8ec34",
-    "order": {
-        "orderId": "ORDER_001",
-        "customerId": "CUSTOMER_001",
-        "totalPrice": 40,
-        "totalQuantity": 5,
-        "items": [
-        {
-            "productId": "PRODUCT_001",
-            "price": 10,
-            "quantity": 3
-        },
-        {
-            "productId": "PRODUCT_002",
-            "price": 5,
-            "quantity": 2
+    "data": {
+        "id": "72029ae3-9876-4d2f-a0ae-aaee86b8ec34",
+        "order": {
+            "orderId": "ORDER_001",
+            "customerId": "CUSTOMER_001",
+            "totalPrice": 40,
+            "totalQuantity": 5,
+            "items": [
+                {
+                    "productId": "PRODUCT_001",
+                    "price": 10,
+                    "quantity": 3
+                },
+                {
+                    "productId": "PRODUCT_002",
+                    "price": 5,
+                    "quantity": 2
+                }
+            ]
         }
-        ]
     }
 }
