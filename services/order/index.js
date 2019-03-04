@@ -20,33 +20,40 @@ app.get('/health', (req, res) => {
   })
 })
 
-const metadataBrokerList = config.get('kafka.metadataBrokerList')
-
 async function start () {
-  return new Promise(async (resolve) => {
-    const { producer } = await defineProducers({
-      Kafka,
-      metadataBrokerList
-    })
-    await defineConsumers({
-      Kafka,
-      producer,
-      metadataBrokerList,
-      consumersDefinition
-    })
-    runningService = app.listen(config.get('port'), config.get('hostname'), () => {
-      console.log(`Order service running at http://${config.get('hostname')}:${config.get('port')}/`)
-      resolve()
-    })
+  return new Promise(async (resolve, reject) => {
+    console.log(`starting order service`)
+    console.log(config.get())
+    try {
+      const metadataBrokerList = config.get('kafka.metadataBrokerList')
+      console.log(`defining kafka producers`)
+      const { producer } = await defineProducers({
+        Kafka,
+        metadataBrokerList
+      })
+      console.log(`defined kafka producers. Defining kafka consumers`)
+      await defineConsumers({
+        Kafka,
+        producer,
+        metadataBrokerList,
+        consumersDefinition
+      })
+      console.log(`defining kafka consumers`)
+      runningService = app.listen(config.get('port'), config.get('hostname'), () => {
+        console.log(`Order service running at http://${config.get('hostname')}:${config.get('port')}/`)
+        resolve()
+      })
+    } catch (error) {
+      console.log('Error starting order service: ', error.message)
+      reject(error)
+    }
   })
 }
 
 async function close () {
-  // TODO: shutdown kafka producers / consumers safely?
   return new Promise((resolve, reject) => {
     if (runningService) {
-      runningService.close(() => {
-      })
+      runningService.close()
       resolve()
     }
     const serviceNotAvailable = new Error(`order service not available`)

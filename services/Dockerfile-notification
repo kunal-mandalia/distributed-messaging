@@ -1,0 +1,26 @@
+FROM node:10.14.0-alpine
+
+RUN apk --no-cache add \
+      bash \
+      g++ \
+      ca-certificates \
+      lz4-dev \
+      musl-dev \
+      cyrus-sasl-dev \
+      openssl-dev \
+      make \
+      python \
+      curl
+
+RUN apk add --no-cache --virtual .build-deps gcc zlib-dev libc-dev bsd-compat-headers py-setuptools bash
+
+COPY notification /services/notification
+COPY shared /services/shared
+
+WORKDIR /services/notification
+
+RUN npm install
+
+EXPOSE 8093 8094
+
+CMD ["node", "index.js"]

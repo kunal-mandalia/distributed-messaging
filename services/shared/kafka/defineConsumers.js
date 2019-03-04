@@ -6,7 +6,7 @@ async function defineConsumers ({
   metadataBrokerList,
   consumersDefinition
 }) {
-  consumersDefinition.map(consumerDefinition => {
+  const consumers = consumersDefinition.map(consumerDefinition => {
     return Consumer({
       Kafka,
       metadataBrokerList,
@@ -15,6 +15,7 @@ async function defineConsumers ({
       handler: consumerDefinition.handler(producer)
     })
   })
+  return Promise.all(consumers)
 }
 
 module.exports = defineConsumers
