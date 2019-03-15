@@ -1,6 +1,8 @@
 {
     "scripts": {
         "build-services": "docker-compose -f ./docker-composition/docker-compose-services.yml build",
+        "compose-persistence": "docker-compose -f ./docker-composition/docker-compose-persistence.yml up",
+        "compose-kafka": "docker-compose -f ./docker-composition/docker-compose-kafka.yml up",
         "compose-all": "docker-compose -f ./docker-composition/docker-compose-kafka.yml -f ./docker-composition/docker-compose-persistence.yml -f ./docker-composition/docker-compose-services.yml up",
         "start-service-api-gateway": "cd ./services/apiGateway && npm install && APP_PORT=8900 node index",
         "start-service-inventory": "cd ./services/inventory && npm install && APP_PORT=8901 node index",

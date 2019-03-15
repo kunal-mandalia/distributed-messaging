@@ -7,22 +7,31 @@ const routes = require('./routes')
 const defineConsumers = require('../shared/kafka/defineConsumers')
 const { defineProducers } = require('../shared/kafka/producers')
 const consumersDefinition = require('./kafka/consumersDefinition')
+const { readiness } = require('../shared/readiness')
+const { APP_NAME } = require('./constants')
 
 let runningService
 
 app.use(morgan)
 app.use(bodyParser.json())
 app.use('/order', routes.order)
-app.get('/health', (req, res) => {
+
+app.get('/liveness', (req, res) => {
   return res.status(200).json({
-    app: 'Order',
+    app: APP_NAME,
     status: 'UP'
+  })
+})
+app.get('/readiness', (req, res) => {
+  return res.status(200).json({
+    app: APP_NAME,
+    ready: readiness.getIsReady(APP_NAME)
   })
 })
 
 async function start () {
   return new Promise(async (resolve, reject) => {
-    console.log(`starting order service`)
+    console.log(`starting ${APP_NAME} service`)
     console.log(config.get())
     try {
       const metadataBrokerList = config.get('kafka.metadataBrokerList')
@@ -40,11 +49,13 @@ async function start () {
       })
       console.log(`defining kafka consumers`)
       runningService = app.listen(config.get('port'), config.get('hostname'), () => {
-        console.log(`Order service running at http://${config.get('hostname')}:${config.get('port')}/`)
+        console.log(`${APP_NAME} service running at http://${config.get('hostname')}:${config.get('port')}/`)
+        readiness.set(APP_NAME, true)
         resolve()
       })
     } catch (error) {
-      console.log('Error starting order service: ', error.message)
+      console.log(`Error starting ${APP_NAME} service`, error.message)
+      readiness.set(APP_NAME, false)
       reject(error)
     }
   })
@@ -56,7 +67,7 @@ async function close () {
       runningService.close()
       resolve()
     }
-    const serviceNotAvailable = new Error(`order service not available`)
+    const serviceNotAvailable = new Error(`${APP_NAME} service not available`)
     reject(serviceNotAvailable)
   })
 }

@@ -6,15 +6,24 @@ const config = require('./config')
 const defineConsumers = require('../shared/kafka/defineConsumers')
 const { defineProducers } = require('../shared/kafka/producers')
 const { generateConsumersDefinition } = require('./kafka/consumersDefinition')
+const { readiness } = require('../shared/readiness')
+const { APP_NAME } = require('./constants')
 
 let wss
 let runningService
 
 app.use(morgan)
-app.get('/health', (req, res) => {
+
+app.get('/liveness', (req, res) => {
   return res.status(200).json({
-    app: 'Notification',
+    app: APP_NAME,
     status: 'UP'
+  })
+})
+app.get('/readiness', (req, res) => {
+  return res.status(200).json({
+    app: APP_NAME,
+    ready: readiness.getIsReady(APP_NAME)
   })
 })
 
@@ -26,7 +35,7 @@ function initialiseWebsockets () {
     })
 
     wss.on('listening', () => {
-      console.log(`notification websocket server listening on ${config.get('hostname')}:${config.get('webSocketPort')}`)
+      console.log(`${APP_NAME} websocket server listening on ${config.get('hostname')}:${config.get('webSocketPort')}`)
     })
 
     wss.on('connection', function connection (ws, req) {
@@ -35,7 +44,7 @@ function initialiseWebsockets () {
         console.log('received: %s', message)
       })
 
-      ws.send('connected to notifications service')
+      ws.send(`connected to ${APP_NAME} service`)
     })
     resolve()
   })
@@ -58,7 +67,8 @@ async function start () {
         consumersDefinition
       })
       runningService = app.listen(config.get('port'), config.get('hostname'), () => {
-        console.log(`notification service running at http://${config.get('hostname')}:${config.get('port')}/`)
+        console.log(`${APP_NAME} service running at http://${config.get('hostname')}:${config.get('port')}/`)
+        readiness.set(APP_NAME, true)
         resolve()
       })
     } catch (error) {
@@ -74,7 +84,7 @@ async function close () {
       runningService.close()
       resolve()
     }
-    const serviceNotAvailable = new Error(`notification service not available`)
+    const serviceNotAvailable = new Error(`${APP_NAME} service not available`)
     reject(serviceNotAvailable)
   })
 }
