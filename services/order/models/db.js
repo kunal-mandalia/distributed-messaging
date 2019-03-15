@@ -1,5 +1,7 @@
 const mongoose = require('mongoose')
 const config = require('../config')
+const { readiness } = require('../../shared/readiness')
+const { APP_NAME } = require('../config')
 
 const delayShutdown = (ms = 5000) => new Promise(resolve => {
   setTimeout(() => {
@@ -16,6 +18,7 @@ mongoose.connect(config.get('mongo.connectionString'), {
       Error: ${error.message}
       Exiting...`
     )
+    readiness.set(APP_NAME, false)
     await delayShutdown()
     process.exit(1)
   }

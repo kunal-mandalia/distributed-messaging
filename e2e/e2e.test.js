@@ -36,19 +36,19 @@ afterAll(async () => {
 })
 
 describe(`distributed-messaging`, () => {
-  describe(`api-gateway service`, () => {
-    it(`should be healthy`, async () => {
+  describe(`apiGateway service`, () => {
+    it(`should be ready`, async () => {
       // arrange
       // act
       const response = await axios.get(
-        `${endpoints.apiGateway}/health`,
+        `${endpoints.apiGateway}/readiness`,
         {
           headers: baseHeaders
         }
       )
 
       // assert
-      expect(response.data).toEqual({ 'app': 'API Gateway', 'status': 'UP' })
+      expect(response.data).toEqual({ 'app': 'apiGateway', 'ready': true })
     })
 
     it(`should create an order`, async () => {

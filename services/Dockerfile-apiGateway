@@ -4,9 +4,10 @@ RUN apk --no-cache add \
       bash \
       curl
 
-COPY apiGateway /services
+COPY apiGateway /services/apiGateway
+COPY shared /services/shared
 
-WORKDIR /services
+WORKDIR /services/apiGateway
 
 RUN npm install
 

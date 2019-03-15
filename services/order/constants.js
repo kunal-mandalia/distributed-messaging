@@ -5,5 +5,6 @@ const ORDER_STATUS_MAP = {
 }
 
 module.exports = {
-  ORDER_STATUS_MAP
+  ORDER_STATUS_MAP,
+  APP_NAME: 'order'
 }
