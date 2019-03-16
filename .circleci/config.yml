@@ -4,17 +4,17 @@
 #
 version: 2
 jobs:
-  build:
-    docker:
-      # specify the version you desire here
-      - image: circleci/node:8.15.1
+  # build:
+  #   docker:
+  #     # specify the version you desire here
+  #     - image: circleci/node:8.15.1
 
-      # Specify service dependencies here if necessary
-      # CircleCI maintains a library of pre-built images
-      # documented at https://circleci.com/docs/2.0/circleci-images/
-      # - image: circleci/mongo:3.4.4
+  #     # Specify service dependencies here if necessary
+  #     # CircleCI maintains a library of pre-built images
+  #     # documented at https://circleci.com/docs/2.0/circleci-images/
+  #     # - image: circleci/mongo:3.4.4
 
-    working_directory: ~/repo
+  #   working_directory: ~/repo
 
     steps:
       - checkout
@@ -36,7 +36,7 @@ jobs:
       # # run tests!
       # - run: yarn test:e2e
 
-  tests:
+  runs-services:
     docker:
       - image: ypereirareis/docker-compose
     working_directory: ~/repo
@@ -45,14 +45,34 @@ jobs:
       - setup_remote_docker
       - run:
           name: start services
-          command: docker-compose -f ./docker-composition/docker-compose-kafka.yml -f ./docker-composition/docker-compose-persistence.yml -f ./docker-composition/docker-compose-services.yml up
-      - run:
-          name: wait until services ready
-          command: ./docker-composition/docker-entrypoint.sh start
+          command: docker-compose -f ./docker-composition/docker-compose-services.yml up
+
+  e2e-tests:
+    working_directory: ~/repo/e2e
+      steps:
+        - checkout
+
+        # Download and cache dependencies
+        - restore_cache:
+            keys:
+              - v1-dependencies-{{ checksum "package.json" }}
+              # fallback to using the latest cache if no exact match is found
+              - v1-dependencies-
+
+        - run: npm install
+
+        - save_cache:
+            paths:
+              - node_modules
+            key: v1-dependencies-{{ checksum "package.json" }}
+
+        # run tests!
+        - run: npm test
+
 
 workflows:
   version: 2
   build-and-test:
     jobs:
-      - build
+      - runs-services
       - tests

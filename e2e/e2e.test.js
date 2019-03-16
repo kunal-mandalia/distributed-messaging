@@ -51,7 +51,7 @@ describe(`distributed-messaging`, () => {
       expect(response.data).toEqual({ 'app': 'apiGateway', 'ready': true })
     })
 
-    it(`should create an order`, async () => {
+    it.skip(`should create an order`, async () => {
       // arrange
       const data = order1
 

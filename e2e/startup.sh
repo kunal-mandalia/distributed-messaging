@@ -44,13 +44,13 @@ if [ "$1" = "start" ]
 then
   echo Started waiting for all services
 
-  wait_until_online kafka localhost 9092
-  wait_until_online mongo localhost 27017
+  # wait_until_online kafka localhost 9092
+  # wait_until_online mongo localhost 27017
   
   wait_for_service apiGateway localhost 8900
-  wait_for_service inventory localhost 8901
-  wait_for_service order localhost 8902
-  wait_for_service notification localhost 8903
+  # wait_for_service inventory localhost 8901
+  # wait_for_service order localhost 8902
+  # wait_for_service notification localhost 8903
   
   echo Services are up and running!
 fi

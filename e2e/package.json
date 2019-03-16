@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "jest"
+    "test": "./startup.sh start && jest"
   },
   "author": "",
   "license": "ISC",
