@@ -18,6 +18,12 @@ jobs:
     steps:
       - checkout
       - run:
+          name: Show directory
+          command: |
+            pwd
+            ls
+        
+      - run:
           name: Install dependencies
           command: npm install
       - run:
