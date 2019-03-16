@@ -9,7 +9,9 @@ jobs:
       - setup_remote_docker
       - run:
           name: start services
-          command: docker-compose -f ./docker-composition/docker-compose-services.yml up
+          command: |
+            docker-compose -f ./docker-composition/docker-compose-services.yml up -d
+            docker-compose ps
 
   e2e-tests:
     docker:
