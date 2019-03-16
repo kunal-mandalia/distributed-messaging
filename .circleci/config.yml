@@ -1,6 +1,6 @@
 version: 2
 jobs:
-  runs-services:
+  start-services:
     docker:
       - image: ypereirareis/docker-compose
     working_directory: ~/repo
@@ -8,12 +8,12 @@ jobs:
       - checkout
       - setup_remote_docker
       - run:
-          name: start services
+          name: Start services
           command: docker-compose -f ./docker-composition/docker-compose-services.yml up -d
 
   e2e-tests:
     docker:
-      - image: ypereirareis/docker-compose
+      - image: circleci/node:8.15.1
     working_directory: ~/repo/e2e
     steps:
       - checkout
@@ -35,7 +35,7 @@ workflows:
   version: 2
   build-and-test:
     jobs:
-      - runs-services
+      - start-services
       - e2e-tests:
           requires:
-            - runs-services
+            - start-services
