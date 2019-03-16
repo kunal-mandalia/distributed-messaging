@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "jest"
+    "test:local": "./startup.sh local && jest",
+    "test:CI": "./startup.sh CI && CONFIG_ENV=CI jest"
   },
   "author": "",
   "license": "ISC",
