@@ -3,15 +3,15 @@ const axios = require('axios')
 const { connect } = require('./db/db')
 const { dropCollections, seedDatabase } = require('./db/util')
 const { notification } = require('./notification')
-const endpoints = require('./endpoints')
 const { order1 } = require('./fixtures')
+const endpoints = require('./endpoints')
 
 let ws
 let db
 const baseHeaders = { 'content-type': 'application/json' }
 
 beforeAll(async () => {
-  ws = new WebSocket('ws://localhost:8904/')
+  ws = new WebSocket(endpoints.notification)
   ws.on('open', () => {})
   ws.on('message', function incoming (data) {
     notification.append(data)

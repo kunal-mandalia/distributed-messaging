@@ -40,17 +40,30 @@ wait_for_service() {
 }
 
 
-if [ "$1" = "start" ]
+echo Started waiting for all services
+if [ "$1" = "CI" ]
 then
-  echo Started waiting for all services
-
-  # wait_until_online kafka localhost 9092
-  # wait_until_online mongo localhost 27017
+  wait_until_online kafka kafka 9092
+  wait_until_online mongo mongo 27017
   
-  wait_for_service apiGateway localhost 8900
-  # wait_for_service inventory localhost 8901
-  # wait_for_service order localhost 8902
-  # wait_for_service notification localhost 8903
+  wait_for_service apiGateway api-gateway 8090
+  wait_for_service inventory inventory 8091
+  wait_for_service order order 8092
+  wait_for_service notification notification 8093
   
   echo Services are up and running!
+elif [ "$1" = "local" ]
+then
+  wait_until_online kafka 0.0.0.0 9092
+  wait_until_online mongo 0.0.0.0 27017
+  
+  wait_for_service apiGateway 0.0.0.0 8900
+  wait_for_service inventory 0.0.0.0 8901
+  wait_for_service order 0.0.0.0 8902
+  wait_for_service notification 0.0.0.0 8903
+  
+  echo Services are up and running!
+else
+  echo Provide environment argyment: "CI" or "local" argument
+  exit 1
 fi

@@ -1,9 +1,9 @@
 const MongoClient = require('mongodb').MongoClient
-const url = 'mongodb://localhost:27017/'
+const endpoints = require('../endpoints')
 
 async function connect () {
   return new Promise(resolve => {
-    MongoClient.connect(url, {
+    MongoClient.connect(endpoints.mongo, {
       useNewUrlParser: true
     }, function (err, db) {
       if (err) throw err
