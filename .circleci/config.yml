@@ -44,11 +44,11 @@ jobs:
       - checkout
       - setup_remote_docker
       - run:
-        name: e2e tests
-        command: yarn compose-all
+          name: e2e tests
+          command: yarn compose-all
       - run:
-        name: wait until ready
-        command: ./docker-composition/docker-entrypoint.sh start
+          name: wait until ready
+          command: ./docker-composition/docker-entrypoint.sh start
 
 workflows:
   version: 2
