@@ -33,5 +33,26 @@ jobs:
             - node_modules
           key: v1-dependencies-{{ checksum "package.json" }}
 
-      # run tests!
-      - run: yarn test:e2e
+      # # run tests!
+      # - run: yarn test:e2e
+
+  tests:
+    docker:
+      - image: ypereirareis/docker-compose
+    working_directory: ~/repo
+    steps:
+      - checkout
+      - setup_remote_docker
+      - run:
+        name: e2e tests
+        command: yarn compose-all
+      - run:
+        name: wait until ready
+        command: ./docker-composition/docker-entrypoint.sh start
+
+workflows:
+  version: 2
+  build-and-test:
+    jobs:
+      - build
+      - tests
