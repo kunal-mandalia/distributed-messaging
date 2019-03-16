@@ -12,6 +12,8 @@ jobs:
           command: docker-compose -f ./docker-composition/docker-compose-services.yml up
 
   e2e-tests:
+    docker:
+      - image: ypereirareis/docker-compose
     working_directory: ~/repo/e2e
     steps:
       - checkout
