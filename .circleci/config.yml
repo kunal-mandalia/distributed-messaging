@@ -44,10 +44,10 @@ jobs:
       - checkout
       - setup_remote_docker
       - run:
-          name: e2e tests
-          command: yarn compose-all
+          name: start services
+          command: docker-compose -f ./docker-composition/docker-compose-kafka.yml -f ./docker-composition/docker-compose-persistence.yml -f ./docker-composition/docker-compose-services.yml up
       - run:
-          name: wait until ready
+          name: wait until services ready
           command: ./docker-composition/docker-entrypoint.sh start
 
 workflows:
