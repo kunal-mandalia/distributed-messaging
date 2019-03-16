@@ -14,7 +14,7 @@ jobs:
   e2e-tests:
     docker:
       - image: circleci/node:8.15.1
-    working_directory: ~/repo
+    working_directory: ~/repo/e2e
     steps:
       - checkout
       - run:
