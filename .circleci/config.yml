@@ -9,7 +9,7 @@ jobs:
       - setup_remote_docker
       - run:
           name: Run tests
-          command: docker-compose -f ./docker-composition/docker-compose-ci-tests.yml up
+          command: docker-compose -f ./docker-composition/docker-compose-test-ci.yml up
 
 workflows:
   version: 2
