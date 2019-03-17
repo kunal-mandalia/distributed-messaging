@@ -9,16 +9,16 @@ jobs:
       - setup_remote_docker
       - run:
           name: Run kafka and mongo
-          command: docker-compose -f ./docker-composition/docker-compose-kafka.yml -f ./docker-composition/docker-compose-persistence.yml up
+          command: docker-compose -f ./docker-composition/docker-compose-kafka.yml -f ./docker-composition/docker-compose-persistence.yml docker-compose -f ./docker-composition/docker-compose-services.yml up
           background: true
       # - run:
       #     name: Run persistence
       #     command: docker-compose -f ./docker-composition/docker-compose-persistence.yml up
       #     background: true
-      - run:
-          name: Build and run services
-          command: docker-compose -f ./docker-composition/docker-compose-services.yml up
-          background: true
+      # - run:
+      #     name: Build and run services
+      #     command: docker-compose -f ./docker-composition/docker-compose-services.yml up
+      #     background: true
       # - run:
       #     name: Build and run services
       #     command: docker-compose -f ./docker-composition/docker-compose-ci-dependencies.yml up
