@@ -1,4 +1,4 @@
-# distributed-messaging
+# distributed-messaging [![CircleCI](https://circleci.com/gh/kunal-mandalia/distributed-messaging.svg?style=svg)](https://circleci.com/gh/kunal-mandalia/distributed-messaging)
 Using messages to communicate between microservices to achieve an available, partition tolerant, eventually consistent system 
 
 ## Overview
@@ -31,6 +31,7 @@ Run individual services:
 * API gateway: `yarn start-service-api-gateway`
 * Order domain service: `yarn start-service-order`
 * Inventory domain service: `yarn start-service-inventory`
+* notification service: `yarn start-service-notification`
 
 
 Seed data:
@@ -46,4 +47,7 @@ Creating an order is idempotent; it'll only be processed once. Therefore ORDER_0
 
 ### Test
 
-The app consists of a set of services each with their own set of tests. Run `yarn test` in the context of a service to run tests.
+#### E2E
+
+* Run all services: `yarn compose-all`
+* Run e2e tests: `yarn test:e2e`

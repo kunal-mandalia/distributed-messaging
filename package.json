@@ -14,7 +14,7 @@
         "post-order-2": "cd ./services/apiGateway/routes/order && curl -H \"Content-Type: application/json\" -d @order2.json -vPOST http://0.0.0.0:8900/order",
         "seed-inventory": "curl -XPOST http://0.0.0.0:8901/automation-testing/seed",
         "drop-inventory": "curl -XDELETE http://0.0.0.0:8901/automation-testing/all",
-        "test:e2e": "cd ./e2e && npm run test"
+        "test:e2e": "cd ./e2e && npm run test:local"
     },
     "devDependencies": {
         "eslint": "^5.12.1",
