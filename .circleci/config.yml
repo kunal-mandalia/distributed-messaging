@@ -15,7 +15,7 @@ jobs:
           name: Run tests
           command: docker-compose -f ./docker-composition/docker-compose-ci-tests.yml up
       - store_test_results:
-        path: ~/repo/e2e/reports
+          path: ~/repo/e2e/reports
 
 workflows:
   version: 2
