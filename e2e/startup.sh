@@ -1,7 +1,7 @@
 #!/bin/bash
 
 delay=1
-maxAttempts=150
+maxAttempts=900
 
 # (serviceName, host, port)
 wait_until_online() {

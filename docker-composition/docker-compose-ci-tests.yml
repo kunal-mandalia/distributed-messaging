@@ -7,3 +7,5 @@ services:
     build:
       context: ../e2e
       dockerfile: Dockerfile-e2e
+    volumes:
+      - ../e2e/reports:/reports

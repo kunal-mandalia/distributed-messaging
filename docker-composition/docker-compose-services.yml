@@ -14,46 +14,46 @@ services:
       APP_PORT: 8090
       SERVICE_ADDRESS_ORDER: "http://order:8092"
 
-  # inventory:
-  #   image: inventory:latest
-  #   restart: always
-  #   build:
-  #     context: ../services
-  #     dockerfile: Dockerfile-inventory
-  #   ports:
-  #     - "8901:8091"
-  #   environment:
-  #     APP_HOSTNAME: "0.0.0.0"
-  #     APP_PORT: 8091
-  #     DB_MONGO_CONNECTION_STRING: "mongodb://mongo:27017/distributed-messaging"
-  #     KAFKA_METADATA_BROKER_LIST: "kafka:9092"
-  #     SERVICE_ADDRESS_ORDER: "http://order:8092"
+  inventory:
+    image: inventory:latest
+    restart: always
+    build:
+      context: ../services
+      dockerfile: Dockerfile-inventory
+    ports:
+      - "8901:8091"
+    environment:
+      APP_HOSTNAME: "0.0.0.0"
+      APP_PORT: 8091
+      DB_MONGO_CONNECTION_STRING: "mongodb://mongo:27017/distributed-messaging"
+      KAFKA_METADATA_BROKER_LIST: "kafka:9092"
+      SERVICE_ADDRESS_ORDER: "http://order:8092"
 
-  # order:
-  #   image: order:latest
-  #   restart: always
-  #   build:
-  #     context: ../services
-  #     dockerfile: Dockerfile-order
-  #   ports:
-  #     - "8902:8092"
-  #   environment:
-  #     APP_HOSTNAME: "0.0.0.0"
-  #     APP_PORT: 8092
-  #     DB_MONGO_CONNECTION_STRING: "mongodb://mongo:27017/distributed-messaging"
-  #     KAFKA_METADATA_BROKER_LIST: "kafka:9092"
+  order:
+    image: order:latest
+    restart: always
+    build:
+      context: ../services
+      dockerfile: Dockerfile-order
+    ports:
+      - "8902:8092"
+    environment:
+      APP_HOSTNAME: "0.0.0.0"
+      APP_PORT: 8092
+      DB_MONGO_CONNECTION_STRING: "mongodb://mongo:27017/distributed-messaging"
+      KAFKA_METADATA_BROKER_LIST: "kafka:9092"
 
-  # notification:
-  #   image: notification:latest
-  #   restart: always
-  #   build:
-  #     context: ../services
-  #     dockerfile: Dockerfile-notification
-  #   ports:
-  #     - "8903:8093"
-  #     - "8904:8094"
-  #   environment:
-  #     APP_HOSTNAME: "0.0.0.0"
-  #     APP_PORT: 8093
-  #     APP_PORT_WEBSOCKET: 8094
-  #     KAFKA_METADATA_BROKER_LIST: "kafka:9092"
+  notification:
+    image: notification:latest
+    restart: always
+    build:
+      context: ../services
+      dockerfile: Dockerfile-notification
+    ports:
+      - "8903:8093"
+      - "8904:8094"
+    environment:
+      APP_HOSTNAME: "0.0.0.0"
+      APP_PORT: 8093
+      APP_PORT_WEBSOCKET: 8094
+      KAFKA_METADATA_BROKER_LIST: "kafka:9092"
