@@ -4,14 +4,15 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test:local": "./startup.sh local && jest",
-    "test:CI": "./startup.sh CI && CONFIG_ENV=CI jest"
+    "test:local": "./startup.sh local && JEST_JUNIT_OUTPUT_DIR=\"./reports\" jest",
+    "test:CI": "./startup.sh CI && CONFIG_ENV=CI JEST_JUNIT_OUTPUT_DIR=\"./reports\" jest --ci --reporters=default --reporters=jest-junit"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "axios": "^0.18.0",
     "jest": "^24.1.0",
+    "jest-junit": "^6.3.0",
     "mongodb": "^3.1.13",
     "ws": "^6.1.4"
   },
