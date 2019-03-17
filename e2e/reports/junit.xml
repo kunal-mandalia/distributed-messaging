@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites name="jest tests" tests="2" failures="0" time="2.182">
+  <testsuite name="distributed-messaging" errors="0" failures="0" skipped="0" timestamp="2019-03-17T14:59:41" time="2.136" tests="2">
+    <testcase classname="distributed-messaging apiGateway service should be ready" name="distributed-messaging apiGateway service should be ready" time="0.08">
+    </testcase>
+    <testcase classname="distributed-messaging apiGateway service should create an order" name="distributed-messaging apiGateway service should create an order" time="0.587">
+    </testcase>
+  </testsuite>
+</testsuites>
