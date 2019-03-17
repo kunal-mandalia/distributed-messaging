@@ -4,30 +4,9 @@ jobs:
     docker:
       - image: circleci/node:jessie
     working_directory: ~/repo
-    parallelism: 4
     steps:
       - checkout
       - setup_remote_docker
-      - run:
-          name: Build api-gateway
-          command: cd ./services && docker build -t api-gateway:latest -f Dockerfile-apiGateway .
-          background: true
-      - run:
-          name: Build order
-          command: cd ./services && docker build -t order:latest -f Dockerfile-order .
-          background: true
-      - run:
-          name: Build inventory
-          command: cd ./services && docker build -t inventory:latest -f Dockerfile-inventory .
-          background: true
-      - run:
-          name: Build notification
-          command: cd ./services && docker build -t notification:latest -f Dockerfile-notification .
-          background: true
-      - run:
-          name: Build e2e tests
-          command: cd ./e2e && docker build -t e2e-tests:latest -f Dockerfile-e2e .
-          background: true
       - run:
           name: Run services
           command: docker-compose -f ./docker-composition/docker-compose-ci-dependencies.yml up
