@@ -1,0 +1,9 @@
+version: '2'
+services:
+
+# tests
+  e2e-tests:
+    image: e2e-tests:latest
+    build:
+      context: ../e2e
+      dockerfile: Dockerfile-e2e

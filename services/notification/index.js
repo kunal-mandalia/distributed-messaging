@@ -34,10 +34,6 @@ function initialiseWebsockets () {
       port: config.get('webSocketPort')
     })
 
-    wss.on('listening', () => {
-      console.log(`${APP_NAME} websocket server listening on ${config.get('hostname')}:${config.get('webSocketPort')}`)
-    })
-
     wss.on('connection', function connection (ws, req) {
       console.log('connection req: ', req)
       ws.on('message', function incoming (message) {
@@ -46,7 +42,11 @@ function initialiseWebsockets () {
 
       ws.send(`connected to ${APP_NAME} service`)
     })
-    resolve()
+
+    wss.on('listening', () => {
+      console.log(`${APP_NAME} websocket server listening on ${config.get('hostname')}:${config.get('webSocketPort')}`)
+      resolve()
+    })
   })
 }
 

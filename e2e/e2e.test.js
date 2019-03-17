@@ -5,6 +5,7 @@ const { dropCollections, seedDatabase } = require('./db/util')
 const { notification } = require('./notification')
 const { order1 } = require('./fixtures')
 const endpoints = require('./endpoints')
+const { TEST_TIMEOUT } = require('./constants')
 
 let ws
 let db
@@ -51,7 +52,7 @@ describe(`distributed-messaging`, () => {
       expect(response.data).toEqual({ 'app': 'apiGateway', 'ready': true })
     })
 
-    it.skip(`should create an order`, async () => {
+    it(`should create an order`, async () => {
       // arrange
       const data = order1
 
@@ -67,6 +68,6 @@ describe(`distributed-messaging`, () => {
       // assert
       await notification.waitUntilReceived(4)
       expect(response.status).toEqual(200)
-    })
+    }, TEST_TIMEOUT)
   })
 })

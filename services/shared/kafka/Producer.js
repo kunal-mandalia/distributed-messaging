@@ -37,7 +37,7 @@ function Producer ({ Kafka, metadataBrokerList }) {
 
     await readyOrDie({
       getIsReady: () => isReady,
-      timeoutSeconds: 10
+      timeoutSeconds: 30
     })
   })
 }

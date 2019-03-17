@@ -89,10 +89,3 @@ services:
       APP_PORT: 8093
       APP_PORT_WEBSOCKET: 8094
       KAFKA_METADATA_BROKER_LIST: "kafka:9092"
-
-  # tests
-  e2e-tests:
-    image: e2e-tests:latest
-    build:
-      context: ../e2e
-      dockerfile: Dockerfile-e2e

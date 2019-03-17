@@ -8,8 +8,14 @@ jobs:
       - checkout
       - setup_remote_docker
       - run:
+          name: Build and run services
+          command: docker-compose -f ./docker-composition/docker-compose-ci-dependencies.yml up
+          background: true
+      - run:
           name: Run tests
-          command: docker-compose -f ./docker-composition/docker-compose-test-ci.yml up
+          command: docker-compose -f ./docker-composition/docker-compose-ci-tests.yml up
+      - store_test_results:
+        path: ~/repo/e2e/reports
 
 workflows:
   version: 2

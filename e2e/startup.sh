@@ -41,6 +41,7 @@ wait_for_service() {
 
 
 echo Started waiting for all services
+
 if [ "$1" = "CI" ]
 then
   wait_until_online kafka kafka 9092
@@ -51,7 +52,6 @@ then
   wait_for_service order order 8092
   wait_for_service notification notification 8093
   
-  echo Services are up and running!
 elif [ "$1" = "local" ]
 then
   wait_until_online kafka 0.0.0.0 9092
@@ -62,8 +62,9 @@ then
   wait_for_service order 0.0.0.0 8902
   wait_for_service notification 0.0.0.0 8903
   
-  echo Services are up and running!
 else
   echo Provide environment argyment: "CI" or "local" argument
   exit 1
 fi
+
+echo Services are up and running!
