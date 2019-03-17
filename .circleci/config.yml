@@ -13,7 +13,7 @@ jobs:
 
   test:
     docker:
-      - image: docker:17.05.0-ce-git
+      - image: circleci/node:jessie
     working_directory: ~/repo
     steps:
       - checkout
