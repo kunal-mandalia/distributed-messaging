@@ -9,7 +9,7 @@ jobs:
       - setup_remote_docker
       - run:
           name: Build api-gateway
-          command: docker build -t api-gateway:latest -f ../services/Dockerfile-apiGateway
+          command: docker build -t api-gateway:latest -f ./services/Dockerfile-apiGateway .
 
   test:
     docker:
