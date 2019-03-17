@@ -10,6 +10,18 @@ jobs:
       - run:
           name: Build api-gateway
           command: cd ./services && docker build -t api-gateway:latest -f Dockerfile-apiGateway .
+      - run:
+          name: Build order
+          command: cd ./services && docker build -t order:latest -f Dockerfile-order .
+      - run:
+          name: Build inventory
+          command: cd ./services && docker build -t inventory:latest -f Dockerfile-inventory .
+      - run:
+          name: Build notification
+          command: cd ./services && docker build -t notification:latest -f Dockerfile-notification .
+      - run:
+          name: Build e2e tests
+          command: cd ./e2e && docker build -t e2e-tests:latest -f Dockerfile-e2e .
 
   test:
     docker:
@@ -19,7 +31,7 @@ jobs:
       - checkout
       - setup_remote_docker
       - run:
-          name: Build and run services
+          name: Run services
           command: docker-compose -f ./docker-composition/docker-compose-ci-dependencies.yml up
           background: true
       - run:
