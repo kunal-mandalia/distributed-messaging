@@ -2,14 +2,14 @@ version: 2
 jobs:
   test-e2e:
     docker:
-      - image: ypereirareis/docker-compose
+      - machine: true
     working_directory: ~/repo
     steps:
       - checkout
       - setup_remote_docker
       - run:
-          name: Run services
-          command: docker-compose -f ./docker-composition/docker-compose-kafka.yml -f ./docker-composition/docker-compose-persistence.yml -f ./docker-composition/docker-compose-services.yml up
+          name: Build and run services
+          command: docker-compose -f ./docker-composition/docker-compose-ci-dependencies.yml up
           background: true
       - run:
           name: Run tests
