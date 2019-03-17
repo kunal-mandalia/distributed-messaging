@@ -65,3 +65,5 @@ typings/
 
 # Throw away notes
 *.notes
+
+**/junit.xml
