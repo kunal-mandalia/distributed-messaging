@@ -71,3 +71,25 @@ describe(`distributed-messaging`, () => {
     }, TEST_TIMEOUT)
   })
 })
+
+describe('network partition', () => {
+  describe('order service offline', () => {
+    beforeAll(() => {
+      // stop order service
+    })
+
+    afterAll(() => {
+      // start order service
+    })
+
+    describe('create an order via apiGatway', () => {
+      it('should acknowledge the request', () => {
+
+      })
+
+      it('should not create an order', () => {
+
+      })
+    })
+  })
+})
