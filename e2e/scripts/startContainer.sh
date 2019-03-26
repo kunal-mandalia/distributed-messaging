@@ -33,9 +33,9 @@ wait_for_service() {
   echo Failed waiting for $1 && exit 1
 }
 
-if [ -z "$1" ]
+if [[ (-z "$1") || (-z "$2") || (-z "$3") ]]
   then
-    echo "No container specified"
+    echo "Invalid args. Expected dockercontainer hostname port"
   else
     start_container "$1" "$2" "$3"
 fi
