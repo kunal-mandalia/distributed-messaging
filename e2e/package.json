@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test:local": "./startup.sh local && JEST_JUNIT_OUTPUT_DIR=\"./reports\" jest",
-    "test:CI": "./startup.sh CI && CONFIG_ENV=CI JEST_JUNIT_OUTPUT_DIR=\"./reports\" jest --ci --reporters=default --reporters=jest-junit"
+    "test:local": "./scripts/startup.sh local && JEST_JUNIT_OUTPUT_DIR=\"./reports\" jest",
+    "test:CI": "./scripts/startup.sh CI && CONFIG_ENV=CI JEST_JUNIT_OUTPUT_DIR=\"./reports\" jest --ci --reporters=default --reporters=jest-junit"
   },
   "author": "",
   "license": "ISC",
