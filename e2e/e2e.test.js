@@ -6,7 +6,7 @@ const { notification } = require('./notification')
 const { order1 } = require('./fixtures')
 const endpoints = require('./endpoints')
 const { startContainer, stopContainer } = require('./helpers')
-const { TEST_TIMEOUT, SERVICES: { INVENTORY }, HOSTNAME } = require('./constants')
+const { TEST_TIMEOUT, SERVICES: { INVENTORY } } = require('./constants')
 
 let ws
 let db
@@ -86,7 +86,7 @@ describe(`distributed-messaging`, () => {
           headers: baseHeaders
         }
       )
-      await startContainer(INVENTORY.DOCKER_CONTAINER, HOSTNAME, INVENTORY.PORT)
+      await startContainer(INVENTORY.DOCKER_CONTAINER, endpoints.inventory)
 
       // assert
       expect(response.status).toEqual(200)

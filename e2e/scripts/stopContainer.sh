@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 stop_container() {
   echo "stopping container" "$1"...
