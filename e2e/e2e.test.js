@@ -5,7 +5,8 @@ const { dropCollections, seedDatabase } = require('./db/util')
 const { notification } = require('./notification')
 const { order1 } = require('./fixtures')
 const endpoints = require('./endpoints')
-const { TEST_TIMEOUT } = require('./constants')
+const { startContainer, stopContainer } = require('./helpers')
+const { TEST_TIMEOUT, SERVICES: { INVENTORY }, HOSTNAME } = require('./constants')
 
 let ws
 let db
@@ -70,26 +71,26 @@ describe(`distributed-messaging`, () => {
       expect(response.status).toEqual(200)
     }, TEST_TIMEOUT)
   })
-})
 
-describe('network partition', () => {
-  describe('order service offline', () => {
-    beforeAll(() => {
-      // stop order service
-    })
+  describe('network partition in inventory service', () => {
+    it('should recover and send all notifications', async () => {
+      // arrange
+      const data = order1
 
-    afterAll(() => {
-      // start order service
-    })
+      // act
+      await stopContainer(INVENTORY.DOCKER_CONTAINER)
+      const response = await axios.post(
+        `${endpoints.apiGateway}/order`,
+        {
+          data,
+          headers: baseHeaders
+        }
+      )
+      await startContainer(INVENTORY.DOCKER_CONTAINER, HOSTNAME, INVENTORY.PORT)
 
-    describe('create an order via apiGatway', () => {
-      it('should acknowledge the request', () => {
-
-      })
-
-      it('should not create an order', () => {
-
-      })
-    })
+      // assert
+      expect(response.status).toEqual(200)
+      await notification.waitUntilReceived(4)
+    }, TEST_TIMEOUT)
   })
 })
