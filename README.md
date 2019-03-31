@@ -50,4 +50,4 @@ Creating an order is idempotent; it'll only be processed once. Therefore ORDER_0
 #### E2E
 
 * Run all services: `yarn compose-all`
-* Run e2e tests: `yarn test:e2e`
+* Run e2e tests: `yarn test-e2e-local`
