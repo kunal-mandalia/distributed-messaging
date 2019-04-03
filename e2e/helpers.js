@@ -11,9 +11,9 @@ async function stopContainer (container) {
   })
 }
 
-async function startContainer (container, hostname, port) {
+async function startContainer (container, address) {
   return new Promise((resolve, reject) => {
-    exec(`./scripts/startContainer.sh ${container} ${hostname} ${port}`, {}, (error, stdout, stderr) => {
+    exec(`./scripts/startContainer.sh ${container} ${address}`, {}, (error, stdout, stderr) => {
       if (error) {
         return reject(error)
       }

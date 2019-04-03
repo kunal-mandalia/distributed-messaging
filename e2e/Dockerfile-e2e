@@ -1,13 +1,13 @@
 FROM node:10.14.0-alpine
 
-RUN apk --no-cache add \
+RUN apk add \
       bash \
-      curl
+      netcat-openbsd \
+      curl \
+      docker
 
 COPY . .
 
 RUN npm install
-
-EXPOSE 8090
 
 CMD ["npm", "run", "test:CI"]

@@ -5,6 +5,8 @@
         "compose-kafka": "docker-compose -f ./docker-composition/docker-compose-kafka.yml up",
         "compose-all": "docker-compose -f ./docker-composition/docker-compose-kafka.yml -f ./docker-composition/docker-compose-persistence.yml -f ./docker-composition/docker-compose-services.yml up",
         "compose-all-down": "docker-compose -f ./docker-composition/docker-compose-kafka.yml -f ./docker-composition/docker-compose-persistence.yml -f ./docker-composition/docker-compose-services.yml down",
+        "compose-ci-dependencies": "COMPOSE_PROJECT_NAME=distributedmessaging docker-compose -f ./docker-composition/docker-compose-ci-dependencies.yml up",
+        "compose-ci-dependencies-down": "COMPOSE_PROJECT_NAME=distributedmessaging docker-compose -f ./docker-composition/docker-compose-ci-dependencies.yml down",
         "start-service-api-gateway": "cd ./services/apiGateway && npm install && APP_PORT=8900 node index",
         "start-service-inventory": "cd ./services/inventory && npm install && APP_PORT=8901 node index",
         "start-service-order": "cd ./services/order && npm install && APP_PORT=8902 node index",
@@ -16,7 +18,8 @@
         "seed-inventory": "curl -XPOST http://0.0.0.0:8901/automation-testing/seed",
         "drop-inventory": "curl -XDELETE http://0.0.0.0:8901/automation-testing/all",
         "test-e2e-local": "cd ./e2e && npm run test:local",
-        "test-e2e-ci": "docker-compose -f ./docker-composition/docker-compose-ci-tests.yml build && docker-compose -f ./docker-composition/docker-compose-ci-tests.yml up"
+        "build-e2e-ci": "docker-compose -f ./docker-composition/docker-compose-ci-tests.yml build",
+        "test-e2e-ci": "COMPOSE_PROJECT_NAME=distributedmessaging docker-compose -f ./docker-composition/docker-compose-ci-tests.yml up"
     },
     "devDependencies": {
         "eslint": "^5.12.1",
