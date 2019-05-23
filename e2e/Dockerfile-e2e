@@ -1,6 +1,6 @@
 FROM node:10.14.0-alpine
 
-RUN apk add \
+RUN apk --no-cache add \
       bash \
       netcat-openbsd \
       curl \
