@@ -67,7 +67,7 @@ describe(`distributed-messaging`, () => {
       )
 
       // assert
-      await notification.waitUntilReceived(4)
+      await notification.wait.until.message.count(4)
       expect(response.status).toEqual(200)
     }, TEST_TIMEOUT)
   })
@@ -91,6 +91,12 @@ describe(`distributed-messaging`, () => {
       // assert
       expect(response.status).toEqual(200)
       await notification.waitUntilReceived(4)
+      expect(notification.message.includes.ordered.attributes([
+        { resource: 'ORDER', subject: 'ORDER_CREATE' },
+        { resource: 'ORDER', subject: 'ORDER_CREATED' },
+        { resource: 'INVENTORY', subject: 'INVENTORY_RESERVED' },
+        { resource: 'ORDER', subject: 'INVENTORY_RESERVED' }
+      ])).toBe(true)
     }, TEST_TIMEOUT)
   })
 })
