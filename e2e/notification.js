@@ -1,7 +1,7 @@
 class Notification {
   constructor (data) {
     this.data = []
-    this.maxTimeout = 20000
+    this.maxTimeout = 60000
     this.delayDuration = 25
 
     this.getData = this.getData.bind(this)
