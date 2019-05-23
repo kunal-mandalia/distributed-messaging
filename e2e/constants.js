@@ -1,5 +1,5 @@
 module.exports = {
-  TEST_TIMEOUT: 5000,
+  TEST_TIMEOUT: 60000,
   SERVICES: {
     INVENTORY: {
       DOCKER_CONTAINER: 'distributedmessaging_inventory_1'
