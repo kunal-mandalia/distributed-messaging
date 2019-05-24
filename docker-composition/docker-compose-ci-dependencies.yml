@@ -63,7 +63,7 @@ services:
       APP_HOSTNAME: "0.0.0.0"
       APP_PORT: 8091
       DB_MONGO_CONNECTION_STRING: "mongodb://mongo:27017/distributed-messaging"
-      KAFKA_METADATA_BROKER_LIST: "kafka:29092"
+      KAFKA_METADATA_BROKER_LIST: "PLAINTEXT://kafka:29092"
       SERVICE_ADDRESS_ORDER: "http://order:8092"
 
   order:
@@ -80,7 +80,7 @@ services:
       APP_HOSTNAME: "0.0.0.0"
       APP_PORT: 8092
       DB_MONGO_CONNECTION_STRING: "mongodb://mongo:27017/distributed-messaging"
-      KAFKA_METADATA_BROKER_LIST: "kafka:29092"
+      KAFKA_METADATA_BROKER_LIST: "PLAINTEXT://kafka:29092"
 
   notification:
     image: notification:latest
@@ -97,4 +97,4 @@ services:
       APP_HOSTNAME: "0.0.0.0"
       APP_PORT: 8093
       APP_PORT_WEBSOCKET: 8094
-      KAFKA_METADATA_BROKER_LIST: "kafka:29092"
+      KAFKA_METADATA_BROKER_LIST: "PLAINTEXT://kafka:29092"
