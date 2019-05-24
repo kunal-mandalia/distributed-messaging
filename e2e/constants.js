@@ -1,5 +1,8 @@
+const ONE_MINUTE = 1000 * 60
+
 module.exports = {
-  TEST_TIMEOUT: 60000,
+  TEST_TIMEOUT: ONE_MINUTE,
+  LONG_TEST_TIMEOUT: ONE_MINUTE * 2,
   SERVICES: {
     INVENTORY: {
       DOCKER_CONTAINER: 'distributedmessaging_inventory_1'
