@@ -9,5 +9,3 @@ RUN apk --no-cache add \
 COPY . .
 
 RUN npm install
-
-CMD ["npm", "run", "test:CI"]

@@ -1,7 +1,7 @@
 #!/bin/bash
 
-delay=1
-maxAttempts=900
+delay=5
+maxAttempts=600
 
 # (serviceName, host, port)
 wait_until_online() {
@@ -27,24 +27,36 @@ wait_for_service() {
         echo $1 is ready
         return
       else
-        echo -ne "."
         sleep $delay
       fi
     else
-      echo -ne "."
       sleep $delay
     fi
   done
   echo Failed waiting for $1 && exit 1
 }
 
+wait_for_kafka_topics() {
+  echo Waiting for Kafka topics ORDER, INVENTORY
+  for i in `seq 1 $maxAttempts`;
+  do
+    TOPICS="$(docker run --net=container:distributedmessaging_zookeeper_1 --rm confluentinc/cp-kafka:5.1.3 kafka-topics --zookeeper localhost:2181 --list)"
+    echo ${TOPICS}
+    if [[ ${TOPICS} == *"ORDER"* ]] && [[ ${TOPICS} == *"INVENTORY"* ]]
+    then
+      echo Kafka topics found
+      return
+    else
+      sleep $delay
+    fi
+  done
+  echo Failed waiting for kafka topics on $1:$2 && exit 1
+}
 
-echo Started waiting for all services
+echo Started waiting for all services...
 
 if [ "$1" = "CI" ]
 then
-  sleep 6m
-
   wait_until_online kafka kafka 29092
   wait_until_online mongo mongo 27017
   
@@ -52,7 +64,9 @@ then
   wait_for_service inventory inventory 8091
   wait_for_service order order 8092
   wait_for_service notification notification 8093
-  
+
+  wait_for_kafka_topics zookeeper 2181
+  sleep 10
 elif [ "$1" = "local" ]
 then
   wait_until_online kafka 0.0.0.0 9092
@@ -62,7 +76,7 @@ then
   wait_for_service inventory 0.0.0.0 8901
   wait_for_service order 0.0.0.0 8902
   wait_for_service notification 0.0.0.0 8903
-  
+  wait_for_kafka_topics localhost 2181
 else
   echo Provide environment argument: "CI" or "local"
   exit 1
