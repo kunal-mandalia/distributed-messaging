@@ -1,7 +1,7 @@
 #!/bin/bash
 
-maxAttempts=100
-delay=2
+maxAttempts=250
+delay=5
 
 wait_for_network() {
   echo Waiting network $1...
@@ -16,5 +16,5 @@ wait_for_network() {
         sleep ${delay}
     fi
   done
-  echo Failed waiting for network $1
+  echo Failed waiting for network $1 && exit 1
 }
