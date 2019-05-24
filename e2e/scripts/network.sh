@@ -8,8 +8,8 @@ wait_for_network() {
   for i in `seq 1 $maxAttempts`;
   do
     echo "Getting network..."
-    network="$(docker network ls|grep $1)"
-    echo ${network}
+    # network="$(docker network ls|grep $1)"
+    # echo ${network}
     sleep 30
     return
     # if [[ ${network} == *"$1"* ]]
