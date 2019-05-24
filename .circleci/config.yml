@@ -9,23 +9,11 @@ jobs:
       - setup_remote_docker
       - run:
           name: Run dependencies
-          command: COMPOSE_PROJECT_NAME=distributedmessaging docker-compose -f ./docker-composition/docker-compose-ci-deps.yml up
+          command: COMPOSE_PROJECT_NAME=distributedmessaging docker-compose -f ./docker-composition/docker-compose-ci-dependencies.yml up
           background: true
       - run:
           name: Run services
-          command: COMPOSE_PROJECT_NAME=distributedmessaging docker-compose -f ./docker-composition/docker-compose-ci-service-api-gateway.yml up
-          background: true
-      - run:
-          name: Run services
-          command: COMPOSE_PROJECT_NAME=distributedmessaging docker-compose -f ./docker-composition/docker-compose-ci-service-inventory.yml up
-          background: true
-      - run:
-          name: Run services
-          command: COMPOSE_PROJECT_NAME=distributedmessaging docker-compose -f ./docker-composition/docker-compose-ci-service-order.yml up
-          background: true
-      - run:
-          name: Run services
-          command: COMPOSE_PROJECT_NAME=distributedmessaging docker-compose -f ./docker-composition/docker-compose-ci-service-notification.yml up
+          command: COMPOSE_PROJECT_NAME=distributedmessaging docker-compose -f ./docker-composition/docker-compose-ci-services.yml up
           background: true
       - run:
           name: Run tests
