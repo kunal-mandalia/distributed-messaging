@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test:local": "./scripts/startup.sh local && JEST_JUNIT_OUTPUT_DIR=\"./reports\" jest --detectOpenHandles",
-    "test:CI": "./scripts/startup.sh CI && CONFIG_ENV=CI JEST_JUNIT_OUTPUT_DIR=\"./reports\" jest --ci --reporters=jest-junit --detectOpenHandles"
+    "test:CI": "./scripts/startup.sh CI && CONFIG_ENV=CI JEST_JUNIT_OUTPUT_DIR=\"./reports\" jest --ci --reporters=jest-junit --detectOpenHandles --verbose"
   },
   "author": "",
   "license": "ISC",
