@@ -44,7 +44,7 @@ echo Started waiting for all services
 
 if [ "$1" = "CI" ]
 then
-  wait_until_online kafka kafka 9092
+  wait_until_online kafka kafka 29092
   wait_until_online mongo mongo 27017
   
   wait_for_service apiGateway api-gateway 8090
@@ -63,7 +63,7 @@ then
   wait_for_service notification 0.0.0.0 8903
   
 else
-  echo Provide environment argyment: "CI" or "local" argument
+  echo Provide environment argument: "CI" or "local"
   exit 1
 fi
 
