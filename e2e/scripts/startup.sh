@@ -3,6 +3,16 @@
 delay=5
 maxAttempts=600
 
+wait_for_network() {
+  echo Waiting network $1...
+  for i in `seq 1 $maxAttempts`;
+  do
+    docker network ls|grep distributedmessaging > /dev/null && echo "$1 online" && return
+    sleep $delay
+  done
+  echo Failed waiting for network $1
+}
+
 # (serviceName, host, port)
 wait_until_online() {
     echo Waiting for $1
@@ -57,6 +67,8 @@ echo Started waiting for all services...
 
 if [ "$1" = "CI" ]
 then
+  wait_for_network distributedmessaging
+
   wait_until_online kafka kafka 29092
   wait_until_online mongo mongo 27017
   
@@ -69,6 +81,8 @@ then
   sleep 10
 elif [ "$1" = "local" ]
 then
+  wait_for_network distributedmessaging
+
   wait_until_online kafka 0.0.0.0 9092
   wait_until_online mongo 0.0.0.0 27017
   
