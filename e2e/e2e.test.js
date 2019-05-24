@@ -21,7 +21,7 @@ beforeAll(async () => {
   db = await connect()
   await notification.delay(150)
   await dropCollections(db)
-})
+}, TEST_TIMEOUT)
 
 beforeEach(async () => {
   await seedDatabase(db)
@@ -35,7 +35,7 @@ afterEach(async () => {
 afterAll(async () => {
   await db.close()
   ws.terminate()
-})
+}, TEST_TIMEOUT)
 
 describe(`distributed-messaging`, () => {
   describe(`apiGateway service`, () => {
