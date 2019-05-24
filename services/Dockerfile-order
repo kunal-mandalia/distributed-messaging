@@ -1,6 +1,6 @@
 FROM node:10.14.0-alpine
 
-RUN apk --no-cache add \
+RUN apk add \
       bash \
       g++ \
       ca-certificates \
@@ -12,7 +12,7 @@ RUN apk --no-cache add \
       python \
       curl
 
-RUN apk add --no-cache --virtual .build-deps gcc zlib-dev libc-dev bsd-compat-headers py-setuptools bash
+RUN apk add --virtual .build-deps gcc zlib-dev libc-dev bsd-compat-headers py-setuptools bash
 
 COPY order /services/order
 COPY shared /services/shared
