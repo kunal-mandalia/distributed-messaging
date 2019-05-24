@@ -43,6 +43,8 @@ echo Started waiting for all services
 
 if [ "$1" = "CI" ]
 then
+  sleep 6m
+
   wait_until_online kafka kafka 29092
   wait_until_online mongo mongo 27017
   
