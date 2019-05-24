@@ -9,7 +9,6 @@ wait_until_online() {
     for i in `seq 1 $maxAttempts`;
     do
         nc -z $2 $3 && echo $1 is online && return
-        echo -ne "."
         sleep $delay
     done
     echo Failed waiting for $1 && exit 1
@@ -44,6 +43,8 @@ echo Started waiting for all services
 
 if [ "$1" = "CI" ]
 then
+  sleep 6m
+
   wait_until_online kafka kafka 29092
   wait_until_online mongo mongo 27017
   

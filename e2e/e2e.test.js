@@ -6,7 +6,7 @@ const { notification } = require('./notification')
 const { order1 } = require('./fixtures')
 const endpoints = require('./endpoints')
 const { startContainer, stopContainer } = require('./helpers')
-const { TEST_TIMEOUT, SERVICES: { INVENTORY } } = require('./constants')
+const { TEST_TIMEOUT, LONG_TEST_TIMEOUT, SERVICES: { INVENTORY } } = require('./constants')
 
 let ws
 let db
@@ -21,7 +21,7 @@ beforeAll(async () => {
   db = await connect()
   await notification.delay(150)
   await dropCollections(db)
-})
+}, TEST_TIMEOUT)
 
 beforeEach(async () => {
   await seedDatabase(db)
@@ -35,7 +35,7 @@ afterEach(async () => {
 afterAll(async () => {
   await db.close()
   ws.terminate()
-})
+}, TEST_TIMEOUT)
 
 describe(`distributed-messaging`, () => {
   describe(`apiGateway service`, () => {
@@ -69,7 +69,7 @@ describe(`distributed-messaging`, () => {
       // assert
       await notification.wait.until.message.count(4)
       expect(response.status).toEqual(200)
-    }, TEST_TIMEOUT)
+    }, LONG_TEST_TIMEOUT)
   })
 
   describe('network partition in inventory service', () => {
@@ -97,6 +97,6 @@ describe(`distributed-messaging`, () => {
         { resource: 'INVENTORY', subject: 'INVENTORY_RESERVED' },
         { resource: 'ORDER', subject: 'INVENTORY_RESERVED' }
       ])).toBe(true)
-    }, TEST_TIMEOUT)
+    }, LONG_TEST_TIMEOUT)
   })
 })
