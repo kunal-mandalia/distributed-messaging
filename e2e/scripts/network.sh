@@ -8,6 +8,7 @@ wait_for_network() {
   for i in `seq 1 $maxAttempts`;
   do
     network="$(docker network ls|grep $1)"
+    echo ${network}
     if [[ ${network} == *"$1"* ]]
       then
         echo "Network available"
