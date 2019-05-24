@@ -13,8 +13,7 @@ jobs:
           background: true
       - run:
           name: Run tests
-          # command: COMPOSE_PROJECT_NAME=distributedmessaging docker-compose -f ./docker-composition/docker-compose-ci-tests.yml up
-          command: cd e2e && npm install && npm run test:local
+          command: COMPOSE_PROJECT_NAME=distributedmessaging docker-compose -f ./docker-composition/docker-compose-ci-tests.yml up
       - store_test_results:
           path: ~/repo/e2e/reports
       - store_artifacts:
