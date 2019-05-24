@@ -16,6 +16,9 @@ jobs:
           command: COMPOSE_PROJECT_NAME=distributedmessaging docker-compose -f ./docker-composition/docker-compose-ci-services.yml up
           background: true
       - run:
+          name: Wait for network
+          command: cd e2e/scripts/ ./network.sh && wait_for_network distributedmessaging
+      - run:
           name: Run tests
           command: COMPOSE_PROJECT_NAME=distributedmessaging docker-compose -f ./docker-composition/docker-compose-ci-tests.yml up
       - store_test_results:
