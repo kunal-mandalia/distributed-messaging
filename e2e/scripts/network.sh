@@ -10,13 +10,15 @@ wait_for_network() {
     echo "Getting network..."
     network="$(docker network ls|grep $1)"
     echo ${network}
-    if [[ ${network} == *"$1"* ]]
-      then
-        echo "Network available"
-        return
-      else
-        sleep ${delay}
-    fi
+    sleep 30
+    return
+    # if [[ ${network} == *"$1"* ]]
+    #   then
+    #     echo "Network available"
+    #     return
+    #   else
+    #     sleep ${delay}
+    # fi
   done
   echo Failed waiting for network $1 && exit 1
 }
