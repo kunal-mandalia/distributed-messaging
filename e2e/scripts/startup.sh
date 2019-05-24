@@ -57,7 +57,6 @@ echo Started waiting for all services...
 
 if [ "$1" = "CI" ]
 then
-  wait_for_kafka_topics zookeeper 2181
   wait_until_online kafka kafka 29092
   wait_until_online mongo mongo 27017
   
@@ -65,10 +64,11 @@ then
   wait_for_service inventory inventory 8091
   wait_for_service order order 8092
   wait_for_service notification notification 8093
+
+  wait_for_kafka_topics zookeeper 2181
   sleep 10
 elif [ "$1" = "local" ]
 then
-  wait_for_kafka_topics localhost 2181
   wait_until_online kafka 0.0.0.0 9092
   wait_until_online mongo 0.0.0.0 27017
   
@@ -76,7 +76,7 @@ then
   wait_for_service inventory 0.0.0.0 8901
   wait_for_service order 0.0.0.0 8902
   wait_for_service notification 0.0.0.0 8903
-  
+  wait_for_kafka_topics localhost 2181
 else
   echo Provide environment argument: "CI" or "local"
   exit 1
