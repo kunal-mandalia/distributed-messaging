@@ -9,8 +9,7 @@ jobs:
       - setup_remote_docker
       - run:
           name: Run services
-          command: COMPOSE_PROJECT_NAME=distributedmessaging docker-compose -f ./docker-composition/docker-compose-ci-dependencies.yml down
-          command: COMPOSE_PROJECT_NAME=distributedmessaging docker-compose -f ./docker-composition/docker-compose-ci-dependencies.yml up
+          command: COMPOSE_PROJECT_NAME=distributedmessaging docker-compose -f ./docker-composition/docker-compose-ci-dependencies.yml down && COMPOSE_PROJECT_NAME=distributedmessaging docker-compose -f ./docker-composition/docker-compose-ci-dependencies.yml up
           background: true
       - run:
           name: Run tests
