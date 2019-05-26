@@ -14,12 +14,12 @@ jobs:
       - run:
           name: Run tests
           command: COMPOSE_PROJECT_NAME=distributedmessaging docker-compose -f ./docker-composition/docker-compose-ci-tests.yml up
-          environment:
-            JEST_JUNIT_OUTPUT: ./e2e/test-results/junit/results.xml
+          # environment:
+          #   JEST_JUNIT_OUTPUT: ./test-results/junit/results.xml
       - store_artifacts:
-          path: ./e2e/test-results/junit
+          path: ./test-results/junit
       - store_test_results:
-          path: ./e2e/test-results
+          path: ./test-results
 
 workflows:
   version: 2
