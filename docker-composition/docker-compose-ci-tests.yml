@@ -12,8 +12,9 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
     privileged: true
     command: |
-      ls
+      ls .
+      ls ./test-results
       npm run test:CI
-      ls
+      ls .
     environment:
       - JEST_JUNIT_OUTPUT=./test-results/junit/results.xml
