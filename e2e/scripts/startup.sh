@@ -6,8 +6,8 @@ maxAttempts=600
 log_info() {
   mkdir -p ./test-results/junit
   touch ./test-results/junit/dummy.xml
-  echo "<yo>dude</yo>" > dummy.xml
-  
+  echo "<yo>dude</yo>" > ./test-results/junit/dummy.xml
+
   printf "\n=== log info ===\n"
   printf "pwd: $(pwd)\n"
   printf "ls .:\n$(ls .)\n"
