@@ -4,6 +4,7 @@ delay=5
 maxAttempts=600
 
 log_info() {
+  mkdir -p ./test-results/junit
   touch ./test-results/junit/dummy.xml
 
   printf "\n=== log info ===\n"
