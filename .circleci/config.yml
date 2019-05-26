@@ -9,13 +9,13 @@ jobs:
       - setup_remote_docker
       - run:
           name: Run services
-          command: COMPOSE_PROJECT_NAME=distributedmessaging docker-compose -f ./docker-composition/docker-compose-ci-dependencies.yml down && COMPOSE_PROJECT_NAME=distributedmessaging docker-compose -f ./docker-composition/docker-compose-ci-dependencies.yml up
+          command: COMPOSE_PROJECT_NAME=distributedmessaging docker-compose -f ./docker-composition/docker-compose-ci-dependencies.yml up
           background: true
       - run:
           name: Run tests
-          command: COMPOSE_PROJECT_NAME=distributedmessaging docker-compose -f ./docker-composition/docker-compose-ci-tests.yml up
-          # environment:
-          #   JEST_JUNIT_OUTPUT: ./test-results/junit/results.xml
+          command: |
+            COMPOSE_PROJECT_NAME=distributedmessaging docker-compose -f ./docker-composition/docker-compose-ci-tests.yml up
+            ls ./test-results/junit
       - store_artifacts:
           path: ./test-results/junit
       - store_test_results:
