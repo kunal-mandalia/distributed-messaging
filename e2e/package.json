@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test:local": "./scripts/startup.sh local && jest --reporters=default --reporters=jest-junit --detectOpenHandles",
+    "test:local": "./scripts/startup.sh local && JEST_JUNIT_OUTPUT=\"./test-results/junit/results.xml\" jest --reporters=default --reporters=jest-junit --detectOpenHandles",
     "test:CI": "./scripts/startup.sh CI && CONFIG_ENV=CI jest --ci --reporters=default --reporters=jest-junit"
   },
   "author": "",
@@ -18,8 +18,5 @@
   },
   "jest": {
     "testEnvironment": "node"
-  },
-  "jest-junit":{
-    "output": "./test-results/junit/results.xml"
   }
 }
