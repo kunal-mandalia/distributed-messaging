@@ -8,9 +8,9 @@ services:
       context: ../e2e
       dockerfile: Dockerfile-e2e
     volumes:
-      - ../e2e/test-results:/test-results
+      - ../e2e/test-results:/e2e/test-results
       - /var/run/docker.sock:/var/run/docker.sock
     privileged: true
     command: npm run test:CI
     environment:
-      - JEST_JUNIT_OUTPUT=./test-results/junit/results.xml
+      - JEST_JUNIT_OUTPUT=./e2e/test-results/junit/results.xml
