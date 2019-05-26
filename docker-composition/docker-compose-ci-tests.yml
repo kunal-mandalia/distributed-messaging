@@ -8,7 +8,7 @@ services:
       context: ../e2e
       dockerfile: Dockerfile-e2e
     volumes:
-      - ~/repo/e2e/test-results:/test-results
+      - ~/repo/test-results:/test-results
       - /var/run/docker.sock:/var/run/docker.sock
     privileged: true
     command: npm run test:CI
