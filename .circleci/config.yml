@@ -14,7 +14,10 @@ jobs:
       - run:
           name: Run tests
           command: |
+            ls ./test-results
             COMPOSE_PROJECT_NAME=distributedmessaging docker-compose -f ./docker-composition/docker-compose-ci-tests.yml up
+            ls ./services
+            ls ./test-results
             ls ./test-results/junit
       - store_artifacts:
           path: ./test-results/junit
