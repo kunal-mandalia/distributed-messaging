@@ -3,15 +3,22 @@
 delay=5
 maxAttempts=600
 
+log_info() {
+  printf "\n=== log info ===\n"
+  printf "pwd: $(pwd)\n"
+  printf "ls .:\n$(ls .)\n"
+  printf "/=== log info ===/\n\n"
+}
+
 # (serviceName, host, port)
 wait_until_online() {
-    echo Waiting for $1
-    for i in `seq 1 $maxAttempts`;
-    do
-        nc -z $2 $3 && echo $1 is online && return
-        sleep $delay
-    done
-    echo Failed waiting for $1 && exit 1
+  echo Waiting for $1
+  for i in `seq 1 $maxAttempts`;
+  do
+      nc -z $2 $3 && echo $1 is online && return
+      sleep $delay
+  done
+  echo Failed waiting for $1 && exit 1
 }
 
 # (serviceName, domain, port)
@@ -53,6 +60,7 @@ wait_for_kafka_topics() {
   echo Failed waiting for kafka topics on $1:$2 && exit 1
 }
 
+log_info
 echo Started waiting for all services...
 
 if [ "$1" = "CI" ]
