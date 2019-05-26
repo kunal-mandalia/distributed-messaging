@@ -66,6 +66,7 @@ then
   wait_for_service notification notification 8093
 
   wait_for_kafka_topics zookeeper 2181
+  sleep 5
 elif [ "$1" = "local" ]
 then
   wait_until_online kafka 0.0.0.0 9092
