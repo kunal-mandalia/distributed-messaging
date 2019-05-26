@@ -11,6 +11,9 @@ services:
       - ~/repo/test-results:/test-results
       - /var/run/docker.sock:/var/run/docker.sock
     privileged: true
-    command: npm run test:CI
+    command: |
+      ls
+      npm run test:CI
+      ls
     environment:
       - JEST_JUNIT_OUTPUT=./test-results/junit/results.xml
