@@ -75,7 +75,7 @@ describe(`distributed-messaging`, () => {
     }, TEST_TIMEOUT)
   })
 
-  describe.skip('network partition in inventory service', () => {
+  describe('network partition in inventory service', () => {
     it('should recover and send all notifications', async () => {
       // arrange
       const data = order1
