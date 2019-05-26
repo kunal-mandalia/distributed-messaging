@@ -8,7 +8,9 @@ jobs:
       - checkout
       - run:
           name: Run services
-          command: COMPOSE_PROJECT_NAME=distributedmessaging docker-compose -f ./docker-composition/docker-compose-ci-dependencies.yml up --build
+          command: |
+            COMPOSE_PROJECT_NAME=distributedmessaging docker-compose -f ./docker-composition/docker-compose-ci-dependencies.yml down
+            COMPOSE_PROJECT_NAME=distributedmessaging docker-compose -f ./docker-composition/docker-compose-ci-dependencies.yml up --build
           background: true
       - run:
           name: Run tests
