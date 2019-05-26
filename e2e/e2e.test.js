@@ -6,7 +6,7 @@ const { notification } = require('./notification')
 const { order1 } = require('./fixtures')
 const endpoints = require('./endpoints')
 const { startContainer, stopContainer } = require('./helpers')
-const { TEST_TIMEOUT, LONG_TEST_TIMEOUT, SERVICES: { INVENTORY } } = require('./constants')
+const { TEST_TIMEOUT, SERVICES: { INVENTORY } } = require('./constants')
 
 let ws
 let db
@@ -100,6 +100,6 @@ describe(`distributed-messaging`, () => {
         { resource: 'INVENTORY', subject: 'INVENTORY_RESERVED' },
         { resource: 'ORDER', subject: 'INVENTORY_RESERVED' }
       ])).toBe(true)
-    }, LONG_TEST_TIMEOUT)
+    }, TEST_TIMEOUT)
   })
 })

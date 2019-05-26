@@ -3,22 +3,6 @@
 delay=5
 maxAttempts=600
 
-log_info() {
-  ls ./test-results
-  ls ./test-results/junit
-
-  # mkdir -p ./test-results/junit
-  # touch ./test-results/junit/dummy.xml
-  # echo "<yo>dude</yo>" > ./test-results/junit/dummy.xml
-
-  printf "\n=== log info ===\n"
-  printf "pwd: $(pwd)\n"
-  printf "ls .:\n$(ls .)\n"
-  printf "ls ./test-results:\n$(ls ./test-results)\n"
-  printf "ls ./test-results/junit:\n$(ls ./test-results/junit)\n"
-  printf "/=== log info ===/\n\n"
-}
-
 # (serviceName, host, port)
 wait_until_online() {
   echo Waiting for $1
@@ -69,7 +53,6 @@ wait_for_kafka_topics() {
   echo Failed waiting for kafka topics on $1:$2 && exit 1
 }
 
-log_info
 echo Started waiting for all services...
 
 if [ "$1" = "CI" ]
