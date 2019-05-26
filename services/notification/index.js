@@ -40,7 +40,7 @@ function initialiseWebsockets () {
         console.log('received: %s', message)
       })
 
-      ws.send(`connected to ${APP_NAME} service`)
+      ws.send(JSON.stringify({ message: `connected to ${APP_NAME} service` }))
     })
 
     wss.on('listening', () => {

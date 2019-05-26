@@ -5,13 +5,13 @@ maxAttempts=600
 
 # (serviceName, host, port)
 wait_until_online() {
-    echo Waiting for $1
-    for i in `seq 1 $maxAttempts`;
-    do
-        nc -z $2 $3 && echo $1 is online && return
-        sleep $delay
-    done
-    echo Failed waiting for $1 && exit 1
+  echo Waiting for $1
+  for i in `seq 1 $maxAttempts`;
+  do
+      nc -z $2 $3 && echo $1 is online && return
+      sleep $delay
+  done
+  echo Failed waiting for $1 && exit 1
 }
 
 # (serviceName, domain, port)
@@ -66,7 +66,7 @@ then
   wait_for_service notification notification 8093
 
   wait_for_kafka_topics zookeeper 2181
-  sleep 10
+  sleep 5
 elif [ "$1" = "local" ]
 then
   wait_until_online kafka 0.0.0.0 9092

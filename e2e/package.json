@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test:local": "./scripts/startup.sh local && JEST_JUNIT_OUTPUT_DIR=\"./reports\" jest --detectOpenHandles",
-    "test:CI": "./scripts/startup.sh CI && CONFIG_ENV=CI JEST_JUNIT_OUTPUT_DIR=\"./reports\" jest --ci --reporters=jest-junit --detectOpenHandles --verbose"
+    "test:local": "./scripts/startup.sh local && JEST_JUNIT_OUTPUT=\"./test-results/junit/results.xml\" jest --reporters=default --reporters=jest-junit --detectOpenHandles",
+    "test:CI": "./scripts/startup.sh CI && CONFIG_ENV=CI jest --ci --reporters=default --reporters=jest-junit"
   },
   "author": "",
   "license": "ISC",

@@ -6,13 +6,16 @@ const { notification } = require('./notification')
 const { order1 } = require('./fixtures')
 const endpoints = require('./endpoints')
 const { startContainer, stopContainer } = require('./helpers')
-const { TEST_TIMEOUT, LONG_TEST_TIMEOUT, SERVICES: { INVENTORY } } = require('./constants')
+const { TEST_TIMEOUT, SERVICES: { INVENTORY } } = require('./constants')
 
 let ws
 let db
 const baseHeaders = { 'content-type': 'application/json' }
 
 beforeAll(async () => {
+  console.log('e2e environment variables:')
+  console.log(process.env)
+
   ws = new WebSocket(endpoints.notification)
   ws.on('open', () => {})
   ws.on('message', function incoming (data) {
@@ -69,7 +72,7 @@ describe(`distributed-messaging`, () => {
       // assert
       await notification.wait.until.message.count(4)
       expect(response.status).toEqual(200)
-    }, LONG_TEST_TIMEOUT)
+    }, TEST_TIMEOUT)
   })
 
   describe('network partition in inventory service', () => {
@@ -97,6 +100,6 @@ describe(`distributed-messaging`, () => {
         { resource: 'INVENTORY', subject: 'INVENTORY_RESERVED' },
         { resource: 'ORDER', subject: 'INVENTORY_RESERVED' }
       ])).toBe(true)
-    }, LONG_TEST_TIMEOUT)
+    }, TEST_TIMEOUT)
   })
 })

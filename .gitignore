@@ -67,3 +67,4 @@ typings/
 *.notes
 
 **/junit.xml
+**/results.xml

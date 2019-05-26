@@ -1,24 +1,24 @@
 version: 2
 jobs:
   test:
-    docker:
-      - image: ypereirareis/docker-compose
+    machine:
+      image: circleci/classic:201808-01
     working_directory: ~/repo
     steps:
       - checkout
-      - setup_remote_docker
       - run:
           name: Run services
-          command: COMPOSE_PROJECT_NAME=distributedmessaging docker-compose -f ./docker-composition/docker-compose-ci-dependencies.yml down && COMPOSE_PROJECT_NAME=distributedmessaging docker-compose -f ./docker-composition/docker-compose-ci-dependencies.yml up
+          command: |
+            COMPOSE_PROJECT_NAME=distributedmessaging docker-compose -f ./docker-composition/docker-compose-ci-dependencies.yml down
+            COMPOSE_PROJECT_NAME=distributedmessaging docker-compose -f ./docker-composition/docker-compose-ci-dependencies.yml up --build
           background: true
       - run:
           name: Run tests
-          command: COMPOSE_PROJECT_NAME=distributedmessaging docker-compose -f ./docker-composition/docker-compose-ci-tests.yml up
-      - store_test_results:
-          path: ~/repo/e2e/reports
+          command: COMPOSE_PROJECT_NAME=distributedmessaging docker-compose -f ./docker-composition/docker-compose-ci-tests.yml up --build
       - store_artifacts:
-          path: ~/repo/e2e/reports
-          destination: raw-test-output
+          path: ./test-results/junit
+      - store_test_results:
+          path: ./test-results
 
 workflows:
   version: 2
