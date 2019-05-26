@@ -15,9 +15,9 @@ jobs:
           name: Run tests
           command: COMPOSE_PROJECT_NAME=distributedmessaging docker-compose -f ./docker-composition/docker-compose-ci-tests.yml up
       - store_artifacts:
-          path: ~/repo/e2e/junit
+          path: ~/repo/e2e/test-results/junit
       - store_test_results:
-          path: ~/repo/e2e/
+          path: ~/repo/e2e/test-results
 
 workflows:
   version: 2
