@@ -4,9 +4,12 @@ delay=5
 maxAttempts=600
 
 log_info() {
+  touch ./test-results/junit/dummy.xml
+
   printf "\n=== log info ===\n"
   printf "pwd: $(pwd)\n"
   printf "ls .:\n$(ls .)\n"
+  printf "ls ./test-results/junit:\n$(ls ./test-results/junit)\n"
   printf "/=== log info ===/\n\n"
 }
 

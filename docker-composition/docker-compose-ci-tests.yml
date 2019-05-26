@@ -15,4 +15,4 @@ services:
     privileged: true
     command: npm run test:CI
     environment:
-      - JEST_JUNIT_OUTPUT=./test-results/junit/results.xml
+      - JEST_JUNIT_OUTPUT=/test-results/junit/results.xml
