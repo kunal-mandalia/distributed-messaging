@@ -69,7 +69,7 @@ describe(`distributed-messaging`, () => {
       // assert
       await notification.wait.until.message.count(4)
       expect(response.status).toEqual(200)
-    }, LONG_TEST_TIMEOUT)
+    }, TEST_TIMEOUT)
   })
 
   describe('network partition in inventory service', () => {
