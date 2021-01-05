@@ -9,7 +9,7 @@
   "author": "Kunal Mandalia <kunal.v.mandalia@gmail.com> (http://kunalmandalia.com/)",
   "license": "ISC",
   "dependencies": {
-    "axios": "0.18.0",
+    "axios": "0.21.1",
     "convict": "4.4.0",
     "express": "4.16.4",
     "mongoose": "5.3.14",
