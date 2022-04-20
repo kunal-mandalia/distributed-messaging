@@ -10,7 +10,7 @@
   "license": "ISC",
   "dependencies": {
     "axios": "0.18.0",
-    "convict": "4.4.0",
+    "convict": "6.2.2",
     "express": "4.16.4",
     "mongoose": "5.3.14",
     "morgan": "1.9.1",
